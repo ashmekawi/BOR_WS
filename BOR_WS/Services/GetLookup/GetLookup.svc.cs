@@ -1,0 +1,79 @@
+﻿using BOR_WS.DataBase;
+using BOR_WS.Modules.GetLookup;
+using System;
+using System.Collections.Generic;
+using System.Data;
+using System.Data.SqlClient;
+using System.Linq;
+using System.Runtime.Serialization;
+using System.ServiceModel;
+using System.Text;
+
+namespace BOR_WS.Services.GetLookup
+{
+    // NOTE: You can use the "Rename" command on the "Refactor" menu to change the class name "GetLookup" in code, svc and config file together.
+    // NOTE: In order to launch WCF Test Client for testing this service, please select GetLookup.svc or GetLookup.svc.cs at the Solution Explorer and start debugging.
+    public class GetLookup : IGetLookup
+    {
+        //SELECT * FROM [dbo].[CRRB_GetLockup] ('activities',0)
+        public GetLookupResponse GetLookupResponse(GetLookupRequest request)
+        {
+            GetLookupResponse response = new GetLookupResponse();
+            try
+            {
+                SqlCommand sqlCommand = new SqlCommand();
+                sqlCommand.CommandText = "SELECT * FROM [dbo].[CRRB_GetLockup] (@TblName,@CondValue)";
+                sqlCommand.CommandType = CommandType.Text;
+                sqlCommand.Parameters.Add(new SqlParameter("@TblName", request.TblName));
+                sqlCommand.Parameters.Add(new SqlParameter("@CondValue", request.CondValue));
+                response.Lookup = GetLookups(sqlCommand);
+                return response;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+           
+        }
+
+        public List<Lookup> GetLookups(SqlCommand sqlCommand)
+        {
+            DBMan dbManager = new DBMan();
+            dbManager.openDatabaseConnection();
+            try
+            {
+                List<Lookup> Lookups = new List<Lookup>();
+                DataSet dbSet = new DataSet();
+                sqlCommand.Connection = dbManager.databaseConnection;
+                sqlCommand.CommandTimeout = 0;
+                dbSet = dbManager.executeSqlCommand(sqlCommand);
+
+                if (dbSet.Tables[0].Rows.Count > 0)
+                {
+
+                    for (int i = 0; i < dbSet.Tables[0].Rows.Count; i++)
+                    {
+                        Lookup Lookup = new Lookup();
+                        DataRow dbRow = dbSet.Tables[0].Rows[i];
+                        Lookup.id = Convert.ToInt32(dbRow["id"].ToString());
+                        Lookup.adesc = dbRow["adesc"].ToString();
+                        Lookups.Add(Lookup);
+                    }
+                    dbManager.closeDatabaseConnection();
+                    return Lookups;
+                }
+                else
+                {
+                    dbManager.closeDatabaseConnection();
+                    throw new DBException(404, "لا يوجد جدول بهذا الاسم");
+                }
+            }
+            catch (Exception ex)
+            {
+                dbManager.closeDatabaseConnection();
+                throw ex;
+            }
+
+        }
+    }
+}

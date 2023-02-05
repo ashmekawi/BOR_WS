@@ -1,0 +1,1 @@
+﻿<%@ ServiceHost Language="C#" Debug="true" Service="BOR_WS.Services.CRA.GetLegals" CodeBehind="GetLegals.svc.cs" %>
