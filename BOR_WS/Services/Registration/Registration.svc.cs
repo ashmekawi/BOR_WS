@@ -91,6 +91,30 @@ namespace BOR_WS.Services.Registration
                 DataSet result = db.executeSqlCommand(sqlCommand);
                 db.closeDatabaseConnection();
                 response = Fun.GetItem<RegistrationResponse>(result.Tables[0].Rows[0]);
+                if(response.ID == -2)
+                {
+                    DataSet result1 = new DataSet();
+                    string str = "SELECT [ID],[Phone],[ConfirmCode]FROM [CRRB_Service].[dbo].[Customers] where Phone='" + request.Phone + "'";
+                    try
+                    {
+                        db.openDatabaseConnection();
+                        SqlCommand sqlCommand1 = new SqlCommand(str);
+                        sqlCommand.CommandType = CommandType.Text;
+                        sqlCommand.Connection = db.databaseConnection;
+                        result1 = db.executeSqlCommand(sqlCommand1);
+                        db.closeDatabaseConnection();
+                        response.ID = -2;
+                        response.Confirmcode = Convert.ToInt32(result1.Tables[0].Rows[0]["ConfirmCode"]);
+                        ReSendConfirmationCode(request.Phone);
+                        return response;
+                    }
+                    catch (Exception)
+                    {
+
+                    }
+                }
+
+
                 try
                 {
                     SendSMS(request.Phone, Convert.ToString(response.Confirmcode), Convert.ToInt32(response.RecID));
