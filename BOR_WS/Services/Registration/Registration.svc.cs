@@ -22,7 +22,6 @@ namespace BOR_WS.Services.Registration
         DBMan db = new DBMan();
         public CreatePasswordResponse CreatrePassword(CreatePasswordRequest request)
         {
-
             CreatePasswordResponse response = new CreatePasswordResponse();
             try
             {
@@ -201,9 +200,13 @@ namespace BOR_WS.Services.Registration
             //request.AddParameter("referenceId", ParameterType.RequestBody);
             //var response = client.Execute(request);
             return true;
+<<<<<<< HEAD
             }
 
 
+=======
+        }
+>>>>>>> 2c9bc3dfbb5246cbf18cad6785814fd8f02069de
         public string sendsms(string msg, string mob, int id, string network)
         {
             string Oprator;
@@ -234,6 +237,7 @@ namespace BOR_WS.Services.Registration
             var content = client.DownloadString(url);
             return content;
         }
+<<<<<<< HEAD
 
         public ReSendConfirmation ReSendConfirmationCode(string Mob)
         {
@@ -261,5 +265,7 @@ namespace BOR_WS.Services.Registration
             return response;
 
         }
+=======
+>>>>>>> 2c9bc3dfbb5246cbf18cad6785814fd8f02069de
     }
 }
