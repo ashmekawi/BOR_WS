@@ -22,17 +22,18 @@ namespace BOR_WS.Services.ControlPanel
             ControlPanelResponse response = new ControlPanelResponse();
             try
             {
-                SqlCommand sqlCommand = new SqlCommand();
-                sqlCommand.CommandText = "";
-                sqlCommand.CommandType = CommandType.Text;
-                sqlCommand.Parameters.Add(new SqlParameter("@id",id));
-                sqlCommand.Connection = db.databaseConnection;
                 db.openDatabaseConnection();
+                SqlCommand sqlCommand = new SqlCommand();
+                sqlCommand.CommandText = "SELECT * FROM [dbo].[Request_StatisticMyRequest] (@CustomerID)";
+                sqlCommand.CommandType = CommandType.Text;
+                sqlCommand.Parameters.Add(new SqlParameter("@CustomerID", id));
+                sqlCommand.Connection = db.databaseConnection;
+              
                 ds=db.executeSqlCommand(sqlCommand);
                 response.RequestsCount = Convert.ToInt32(ds.Tables[0].Rows[0][0]);
-                response.BOCount = Convert.ToInt32(ds.Tables[0].Rows[0][0]);
-                response.ArggCount = Convert.ToInt32(ds.Tables[0].Rows[0][0]);
-                response.LegalCount = Convert.ToInt32(ds.Tables[0].Rows[0][0]);
+                response.BOCount = Convert.ToInt32(ds.Tables[0].Rows[0][3]);
+                response.ArggCount = Convert.ToInt32(ds.Tables[0].Rows[0][2]);
+                response.LegalCount = Convert.ToInt32(ds.Tables[0].Rows[0][1]);
                 return response;
             }
             catch (Exception ex)

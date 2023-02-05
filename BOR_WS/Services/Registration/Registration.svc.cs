@@ -99,16 +99,16 @@ namespace BOR_WS.Services.Registration
                     {
                         db.openDatabaseConnection();
                         SqlCommand sqlCommand1 = new SqlCommand(str);
-                        sqlCommand.CommandType = CommandType.Text;
-                        sqlCommand.Connection = db.databaseConnection;
+                        sqlCommand1.CommandType = CommandType.Text;
+                        sqlCommand1.Connection = db.databaseConnection;
                         result1 = db.executeSqlCommand(sqlCommand1);
                         db.closeDatabaseConnection();
                         response.ID = -2;
                         response.Confirmcode = Convert.ToInt32(result1.Tables[0].Rows[0]["ConfirmCode"]);
-                        ReSendConfirmationCode(request.Phone);
+                        SendSMS(request.Phone,"Your Confimation Code Is " + response.Confirmcode);
                         return response;
                     }
-                    catch (Exception)
+                    catch (Exception ex)
                     {
 
                     }
@@ -117,7 +117,7 @@ namespace BOR_WS.Services.Registration
 
                 try
                 {
-                    SendSMS(request.Phone, Convert.ToString(response.Confirmcode), Convert.ToInt32(response.RecID));
+                    SendSMS(request.Phone, Convert.ToString(response.Confirmcode));
                 }
                 catch (Exception ex)
                 {
@@ -162,7 +162,7 @@ namespace BOR_WS.Services.Registration
                 return false;
             }
         }
-        public bool SendSMS(string phone, string msg, int id)
+        public bool SendSMS(string phone, string msg)
         {
             DataSet result = new DataSet();
             try
@@ -174,7 +174,7 @@ namespace BOR_WS.Services.Registration
                 sqlCommand.Parameters.AddWithValue("@Phone", phone);
                 sqlCommand.Parameters.AddWithValue("@MSG", msg);
                 sqlCommand.Parameters.AddWithValue("@Result", "");
-                sqlCommand.Parameters.AddWithValue("@UserID", id);
+                sqlCommand.Parameters.AddWithValue("@UserID", 0);
                 sqlCommand.Parameters.AddWithValue("@New", 1);
                 sqlCommand.Connection = db.databaseConnection;
                 result = db.executeSqlCommand(sqlCommand);
@@ -200,7 +200,7 @@ namespace BOR_WS.Services.Registration
                 sqlCommand.Parameters.AddWithValue("@Phone", phone);
                 sqlCommand.Parameters.AddWithValue("@MSG", msg);
                 sqlCommand.Parameters.AddWithValue("@Result", x);
-                sqlCommand.Parameters.AddWithValue("@UserID", id);
+                sqlCommand.Parameters.AddWithValue("@UserID", 0);
                 sqlCommand.Parameters.AddWithValue("@New", 0);
                 sqlCommand.Connection = db.databaseConnection;
                 result = db.executeSqlCommand(sqlCommand);
@@ -273,7 +273,7 @@ namespace BOR_WS.Services.Registration
             ReSendConfirmation response = new ReSendConfirmation();
             response.ID = Convert.ToInt32(result.Tables[0].Rows[0]["ID"]);
             response.Confirmcode = Convert.ToInt32(result.Tables[0].Rows[0]["Confirmcode"]);
-            SendSMS(Mob,Convert.ToString(response.Confirmcode), 0);
+            SendSMS(Mob,Convert.ToString(response.Confirmcode));
 
             return response;
 

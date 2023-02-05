@@ -22,7 +22,7 @@ namespace BOR_WS.Services.Registration
         CreatePasswordResponse CreatrePassword(CreatePasswordRequest request);
         [OperationContract]
         LoginResponse Login(LoginRequest request);
-        bool SendSMS(string phone, string msg, int id);
+        bool SendSMS(string phone, string msg);
         string sendsms(string msg, string mob, int id, string network);
         [OperationContract]
         ReSendConfirmation ReSendConfirmationCode(string Mob);
