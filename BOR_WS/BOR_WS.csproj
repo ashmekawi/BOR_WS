@@ -132,6 +132,7 @@
     <Compile Include="Modules\Registration\LoginResponse.cs" />
     <Compile Include="Modules\Registration\RegistrationRequest.cs" />
     <Compile Include="Modules\Registration\RegistrationResponse.cs" />
+    <Compile Include="Modules\Registration\ReSendConfirmation.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\AddRequest\AddRequest.svc.cs">
       <DependentUpon>AddRequest.svc</DependentUpon>
@@ -169,7 +170,9 @@
       <DependentUpon>Web111.config</DependentUpon>
     </None>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Services\ControlPanel\" />
+  </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>

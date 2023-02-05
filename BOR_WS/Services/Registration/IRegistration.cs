@@ -24,5 +24,7 @@ namespace BOR_WS.Services.Registration
         LoginResponse Login(LoginRequest request);
         bool SendSMS(string phone, string msg, int id);
         string sendsms(string msg, string mob, int id, string network);
+        [OperationContract]
+        ReSendConfirmation ReSendConfirmationCode(string Mob);
     }
 }

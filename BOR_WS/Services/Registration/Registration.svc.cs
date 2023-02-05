@@ -141,26 +141,67 @@ namespace BOR_WS.Services.Registration
         }
         public bool SendSMS(string phone,string msg,int id)
         {
+            DataSet result = new DataSet();
+            try
+            {
+                db.openDatabaseConnection();
+                SqlCommand sqlCommand = new SqlCommand("[sp_SMS_ADD]");
+                sqlCommand.CommandType = CommandType.StoredProcedure;
+                sqlCommand.Parameters.AddWithValue("@ID", 0);
+                sqlCommand.Parameters.AddWithValue("@Phone", phone);
+                sqlCommand.Parameters.AddWithValue("@MSG", msg);
+                sqlCommand.Parameters.AddWithValue("@Result", "");
+                sqlCommand.Parameters.AddWithValue("@UserID", id);
+                sqlCommand.Parameters.AddWithValue("@New", 1);
+                sqlCommand.Connection = db.databaseConnection;
+                 result = db.executeSqlCommand(sqlCommand);
+                db.closeDatabaseConnection();
+            }
+
+            catch (Exception ex)
+            {
+
+            }
+
             phone = "2" + phone;
             string network = phone.Substring(0, 4);
 
-            var x = sendsms(msg, phone, 3000000 + id, network);
+            var x = sendsms(msg, phone,Convert.ToInt32(result.Tables[0].Rows[0][0]), network);
+
+            try
+            {
+                db.openDatabaseConnection();
+                SqlCommand sqlCommand = new SqlCommand("[sp_SMS_ADD]");
+                sqlCommand.CommandType = CommandType.StoredProcedure;
+                sqlCommand.Parameters.AddWithValue("@ID", Convert.ToInt32(result.Tables[0].Rows[0][0]));
+                sqlCommand.Parameters.AddWithValue("@Phone", phone);
+                sqlCommand.Parameters.AddWithValue("@MSG", msg);
+                sqlCommand.Parameters.AddWithValue("@Result", x);
+                sqlCommand.Parameters.AddWithValue("@UserID", id);
+                sqlCommand.Parameters.AddWithValue("@New", 0);
+                sqlCommand.Connection = db.databaseConnection;
+                result = db.executeSqlCommand(sqlCommand);
+                db.closeDatabaseConnection();
+            }
+
+            catch (Exception ex)
+            {
+
+            }
 
 
 
-
-
-            var client = new RestClient("https://api.ultramsg.com/instance28563/messages/chat");
-            var request = new RestRequest("",Method.Post);
-            request.AddHeader("content-type", "application/x-www-form-urlencoded");
-            request.AddParameter("token", "tb6o11jpueg2ppvy");
-            request.AddParameter("to", phone);
-            request.AddParameter("body", msg);
-            request.AddParameter("priority","1");
-            request.AddParameter("referenceId", ParameterType.RequestBody);
-            var response = client.Execute(request);
+            //var client = new RestClient("https://api.ultramsg.com/instance28563/messages/chat");
+            //var request = new RestRequest("", Method.Post);
+            //request.AddHeader("content-type", "application/x-www-form-urlencoded");
+            //request.AddParameter("token", "tb6o11jpueg2ppvy");
+            //request.AddParameter("to", phone);
+            //request.AddParameter("body", msg);
+            //request.AddParameter("priority", "1");
+            //request.AddParameter("referenceId", ParameterType.RequestBody);
+            //var response = client.Execute(request);
             return true;
-        }
+            }
 
 
         public string sendsms(string msg, string mob, int id, string network)
@@ -194,8 +235,31 @@ namespace BOR_WS.Services.Registration
             return content;
         }
 
+        public ReSendConfirmation ReSendConfirmationCode(string Mob)
+        {
+            DataSet result = new DataSet();
+            string str = "SELECT [ID],[Phone],[ConfirmCode]FROM [CRRB_Service].[dbo].[Customers] where Phone='"+Mob+"'";
+            try
+            {
+                db.openDatabaseConnection();
+                SqlCommand sqlCommand = new SqlCommand(str);
+                sqlCommand.CommandType = CommandType.Text;
+                sqlCommand.Connection = db.databaseConnection;
+                result = db.executeSqlCommand(sqlCommand);
+                db.closeDatabaseConnection();
+            }
+            catch (Exception)
+            {
 
+                throw;
+            }
+            ReSendConfirmation response = new ReSendConfirmation();
+            response.ID = Convert.ToInt32(result.Tables[0].Rows[0]["ID"]);
+            response.Confirmcode = Convert.ToInt32(result.Tables[0].Rows[0]["Confirmcode"]);
+            SendSMS(Mob,Convert.ToString(response.Confirmcode), 0);
 
-      
+            return response;
+
+        }
     }
 }
