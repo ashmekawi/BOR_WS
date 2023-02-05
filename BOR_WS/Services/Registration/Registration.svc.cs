@@ -105,7 +105,7 @@ namespace BOR_WS.Services.Registration
                         db.closeDatabaseConnection();
                         response.ID = -2;
                         response.Confirmcode = Convert.ToInt32(result1.Tables[0].Rows[0]["ConfirmCode"]);
-                        SendSMS(request.Phone,"Your Confimation Code Is " + response.Confirmcode);
+                        SendSMS(request.Phone, response.Confirmcode.ToString());
                         return response;
                     }
                     catch (Exception ex)
