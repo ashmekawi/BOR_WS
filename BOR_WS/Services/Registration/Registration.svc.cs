@@ -67,15 +67,15 @@ namespace BOR_WS.Services.Registration
                 return response;
             }
             return response;
-           
+
         }
         public RegistrationResponse registration(RegistrationRequest request)
         {
             RegistrationValidation validation = new RegistrationValidation();
-           
-                validation.Validate(request);
-           
-           
+
+            validation.Validate(request);
+
+
             RegistrationResponse response = new RegistrationResponse();
             try
             {
@@ -93,14 +93,14 @@ namespace BOR_WS.Services.Registration
                 response = Fun.GetItem<RegistrationResponse>(result.Tables[0].Rows[0]);
                 try
                 {
-                    SendSMS(request.Phone, Convert.ToString(response.Confirmcode),Convert.ToInt32(response.RecID));
+                    SendSMS(request.Phone, Convert.ToString(response.Confirmcode), Convert.ToInt32(response.RecID));
                 }
-                catch (Exception ex )
+                catch (Exception ex)
                 {
 
                     response.Ldesc = ex.Message;
                 }
-               
+
             }
             catch (Exception ex)
             {
@@ -111,12 +111,12 @@ namespace BOR_WS.Services.Registration
         }
         public bool ValedConfirmationCode(string ConfimationCode, string NID)
         {
-            string code ="";
+            string code = "";
             int VLD = 0;
             try
             {
                 db.openDatabaseConnection();
-                SqlCommand sqlCommand = new SqlCommand("SELECT ID,isnull(ConfirmCode,0) FROM [dbo].[Customers_GetInfoByNID] ('"+ NID +"')");
+                SqlCommand sqlCommand = new SqlCommand("SELECT ID,isnull(ConfirmCode,0) FROM [dbo].[Customers_GetInfoByNID] ('" + NID + "')");
                 sqlCommand.CommandType = CommandType.Text;
                 sqlCommand.Connection = db.databaseConnection;
                 DataSet result = db.executeSqlCommand(sqlCommand);
@@ -138,7 +138,7 @@ namespace BOR_WS.Services.Registration
                 return false;
             }
         }
-        public bool SendSMS(string phone,string msg,int id)
+        public bool SendSMS(string phone, string msg, int id)
         {
             DataSet result = new DataSet();
             try
@@ -153,7 +153,7 @@ namespace BOR_WS.Services.Registration
                 sqlCommand.Parameters.AddWithValue("@UserID", id);
                 sqlCommand.Parameters.AddWithValue("@New", 1);
                 sqlCommand.Connection = db.databaseConnection;
-                 result = db.executeSqlCommand(sqlCommand);
+                result = db.executeSqlCommand(sqlCommand);
                 db.closeDatabaseConnection();
             }
 
@@ -165,7 +165,7 @@ namespace BOR_WS.Services.Registration
             phone = "2" + phone;
             string network = phone.Substring(0, 4);
 
-            var x = sendsms(msg, phone,Convert.ToInt32(result.Tables[0].Rows[0][0]), network);
+            var x = sendsms(msg, phone, Convert.ToInt32(result.Tables[0].Rows[0][0]), network);
 
             try
             {
@@ -200,13 +200,12 @@ namespace BOR_WS.Services.Registration
             //request.AddParameter("referenceId", ParameterType.RequestBody);
             //var response = client.Execute(request);
             return true;
-<<<<<<< HEAD
-            }
-
-
-=======
         }
->>>>>>> 2c9bc3dfbb5246cbf18cad6785814fd8f02069de
+
+
+    
+
+
         public string sendsms(string msg, string mob, int id, string network)
         {
             string Oprator;
@@ -237,7 +236,7 @@ namespace BOR_WS.Services.Registration
             var content = client.DownloadString(url);
             return content;
         }
-<<<<<<< HEAD
+
 
         public ReSendConfirmation ReSendConfirmationCode(string Mob)
         {
@@ -265,7 +264,6 @@ namespace BOR_WS.Services.Registration
             return response;
 
         }
-=======
->>>>>>> 2c9bc3dfbb5246cbf18cad6785814fd8f02069de
+
     }
 }
