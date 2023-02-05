@@ -187,9 +187,6 @@ namespace BOR_WS.Services.Registration
             {
 
             }
-
-
-
             //var client = new RestClient("https://api.ultramsg.com/instance28563/messages/chat");
             //var request = new RestRequest("", Method.Post);
             //request.AddHeader("content-type", "application/x-www-form-urlencoded");
@@ -201,11 +198,6 @@ namespace BOR_WS.Services.Registration
             //var response = client.Execute(request);
             return true;
         }
-
-
-    
-
-
         public string sendsms(string msg, string mob, int id, string network)
         {
             string Oprator;
@@ -236,8 +228,6 @@ namespace BOR_WS.Services.Registration
             var content = client.DownloadString(url);
             return content;
         }
-
-
         public ReSendConfirmation ReSendConfirmationCode(string Mob)
         {
             DataSet result = new DataSet();

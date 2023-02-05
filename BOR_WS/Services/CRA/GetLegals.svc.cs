@@ -17,13 +17,11 @@ namespace BOR_WS.Services.CRA
     {
         public GetCompanyInfoNIDResponse GetCompanyInfoNIDResponse(GetCompanyInfoNIDRequest GetCompanyInfoNIDRequest)
         {
-            
-           
                 GetCompanyInfoNIDResponse response = new GetCompanyInfoNIDResponse();
                 try
                 {
                     SqlCommand sqlCommand = new SqlCommand();
-                    sqlCommand.CommandText = "select * from dbo.fn_ps_get_comp_info_pid(@prsn_id)";
+                    sqlCommand.CommandText = "SELECT * FROM [dbo].[Fn_Por_GetDataByNID] (@Nid)";
                     sqlCommand.CommandType = CommandType.Text;
                     sqlCommand.Parameters.Add(new SqlParameter("@prsn_id", GetCompanyInfoNIDRequest.citizenNationalId));
                     response.Companies = GetCompaniesInformation(sqlCommand);
@@ -32,8 +30,7 @@ namespace BOR_WS.Services.CRA
                 catch (Exception ex)
                 {
                     throw ex;
-                }
-           
+                }  
         }
         public List<Companies> GetCompaniesInformation(SqlCommand sqlCommand)
         {
@@ -54,21 +51,14 @@ namespace BOR_WS.Services.CRA
                     {
                         Companies companyInformation = new Companies();
                         DataRow dbRow = dbSet.Tables[0].Rows[i];
-                        companyInformation.UCR = dbRow["ucr"].ToString();
-                        companyInformation.CRA = Convert.ToInt32(dbRow["CRA_NUM"].ToString());
-                        companyInformation.RegNum = Convert.ToInt32(dbRow["REGISTRATION_NO"].ToString());
-                        companyInformation.OfficeName = dbRow["OFFICE_NAME"].ToString();
-                        companyInformation.Governorate = dbRow["Gov_Name"].ToString();
-                        companyInformation.uid = dbRow["TAX_NUMBER"].ToString();
-                        companyInformation.companyName = dbRow["COMP_NAME"].ToString();
-                        companyInformation.position = dbRow["PERSON_POSITION"].ToString();
-                        companyInformation.NextRenewalDate = dbRow["NEXT_RENEW"].ToString();
-                        companyInformation.RegCreationDate = dbRow["REG_DATE"].ToString();
-                        companyInformation.signStatus = Convert.ToInt32(dbRow["RNW_VLD_PRSN_FLG"].ToString());
-                        companyInformation.companySecurityApprovalFlag = Convert.ToInt32(dbRow["RNW_VLD_SEC_FLG"].ToString());
-                        companyInformation.companystatusFlag = Convert.ToInt32(dbRow["RNW_VLD_COMP_STATS_FLG"].ToString());
-                        companyInformation.ClassCode = Convert.ToInt32(dbRow["FK_CLASSCODE"].ToString());
-
+                        companyInformation.CoName = dbRow["CoName"].ToString();
+                        companyInformation.Registration_No = dbRow["Registration_No"].ToString();
+                        companyInformation.OfficeName = dbRow["OfficeName"].ToString();
+                        companyInformation.UCR = dbRow["UCR"].ToString();
+                        companyInformation.Date0 = dbRow["Date0"].ToString();
+                        companyInformation.RenStatus = dbRow["RenStatus"].ToString();
+                        companyInformation.BorStatus = dbRow["BorStatus"].ToString();
+                       
                         companiesInformation.Add(companyInformation);
                     }
                     dbManager.closeDatabaseConnection();

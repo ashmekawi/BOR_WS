@@ -102,6 +102,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Services\AddRequest\AddRequest.svc" />
+    <Content Include="Services\ControlPanel\ControlPanel.svc" />
     <Content Include="Services\CRA\GetLegals.svc" />
     <Content Include="Services\GetLookup\GetLookup.svc" />
     <Content Include="Services\Registration\Registration.svc" />
@@ -120,6 +121,7 @@
     <Compile Include="Modules\AddRequest\GetRequestsResponse.cs" />
     <Compile Include="Modules\AddRequest\Request.cs" />
     <Compile Include="Modules\BORException.cs" />
+    <Compile Include="Modules\ControlPanel\ControlPanelResponse.cs" />
     <Compile Include="Modules\CRA\Companies.cs" />
     <Compile Include="Modules\CRA\GetCompanyInfoNIDRequest.cs" />
     <Compile Include="Modules\CRA\GetCompanyInfoNIDResponse.cs" />
@@ -138,6 +140,10 @@
       <DependentUpon>AddRequest.svc</DependentUpon>
     </Compile>
     <Compile Include="Services\AddRequest\IAddRequest.cs" />
+    <Compile Include="Services\ControlPanel\ControlPanel.svc.cs">
+      <DependentUpon>ControlPanel.svc</DependentUpon>
+    </Compile>
+    <Compile Include="Services\ControlPanel\IControlPanel.cs" />
     <Compile Include="Services\CRA\GetLegals.svc.cs">
       <DependentUpon>GetLegals.svc</DependentUpon>
     </Compile>
@@ -170,9 +176,7 @@
       <DependentUpon>Web111.config</DependentUpon>
     </None>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Services\ControlPanel\" />
-  </ItemGroup>
+  <ItemGroup />
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
