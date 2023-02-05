@@ -23,7 +23,7 @@ namespace BOR_WS.Services.CRA
                     SqlCommand sqlCommand = new SqlCommand();
                     sqlCommand.CommandText = "SELECT * FROM [dbo].[Fn_Por_GetDataByNID] (@Nid)";
                     sqlCommand.CommandType = CommandType.Text;
-                    sqlCommand.Parameters.Add(new SqlParameter("@prsn_id", GetCompanyInfoNIDRequest.citizenNationalId));
+                    sqlCommand.Parameters.Add(new SqlParameter("@NID", GetCompanyInfoNIDRequest.citizenNationalId));
                     response.Companies = GetCompaniesInformation(sqlCommand);
                     return response;
                 }
