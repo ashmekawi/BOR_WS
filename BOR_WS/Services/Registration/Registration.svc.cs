@@ -22,7 +22,6 @@ namespace BOR_WS.Services.Registration
         DBMan db = new DBMan();
         public CreatePasswordResponse CreatrePassword(CreatePasswordRequest request)
         {
-
             CreatePasswordResponse response = new CreatePasswordResponse();
             try
             {
