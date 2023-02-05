@@ -160,8 +160,6 @@ namespace BOR_WS.Services.Registration
             var response = client.Execute(request);
             return true;
         }
-
-
         public string sendsms(string msg, string mob, int id, string network)
         {
             string Oprator;
@@ -192,9 +190,5 @@ namespace BOR_WS.Services.Registration
             var content = client.DownloadString(url);
             return content;
         }
-
-
-
-      
     }
 }
