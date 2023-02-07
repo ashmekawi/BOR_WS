@@ -1,7 +1,10 @@
-﻿using System;
+﻿using BOR_WS.DataBase;
+using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Data.SqlClient;
 using System.Linq;
+using System.Net;
 using System.Reflection;
 using System.Web;
 
@@ -35,6 +38,99 @@ namespace BOR_WS.EXTFUN
                 }
             }
             return obj;
+        }
+
+
+        public static void Sms(string msg, string phone)
+        {
+            string id = "";
+            DBMan db = new DBMan();
+            DataSet result = new DataSet();
+            try
+            {
+                db.openDatabaseConnection();
+                SqlCommand sqlCommand = new SqlCommand("[sp_SMS_ADD]");
+                sqlCommand.CommandType = CommandType.StoredProcedure;
+                sqlCommand.Parameters.AddWithValue("@ID", 0);
+                sqlCommand.Parameters.AddWithValue("@Phone", phone);
+                sqlCommand.Parameters.AddWithValue("@MSG", msg);
+                sqlCommand.Parameters.AddWithValue("@Result", "");
+                sqlCommand.Parameters.AddWithValue("@UserID", 0);
+                sqlCommand.Parameters.AddWithValue("@New", 1);
+                sqlCommand.Connection = db.databaseConnection;
+                result = db.executeSqlCommand(sqlCommand);
+                db.closeDatabaseConnection();
+                id = result.Tables[0].Rows[0][0].ToString();
+            }
+
+            catch (Exception ex)
+            {
+
+            }
+
+            phone = "2" + phone;
+            string network = phone.Substring(0, 4);
+
+            string Oprator="";
+            switch (network)
+            {
+                case "2010":
+                    Oprator = "Vodafone";
+                    break;
+                case "2012":
+                    Oprator = "Mobinil";
+                    break;
+                case "2011":
+                    Oprator = "Etisalat";
+                    break;
+                case "2015":
+                    Oprator = "WE";
+                    break;
+                default:
+                    break;
+
+            }
+            msg = "رقم التفعيل الخاص بكم هو" + msg;
+            string url = @"http://bulksms.advansystelecom.com/Message_Request.aspx?" +
+                "username=ITDA&password=!TD@P$D&request_id=" + id + "&Mobile_No=" + phone + "&type=2" +
+                "&message=" + msg + "&encoding=2&sender=ITDA" +
+                "&operator=" + Oprator + "";
+            var client = new WebClient();
+            var content = "";
+            try
+            {
+                 content = client.DownloadString(url);
+
+            }
+            catch (Exception ex)
+            {
+
+                content = ex.Message;
+            }
+           
+
+
+            try
+            {
+                db.openDatabaseConnection();
+                SqlCommand sqlCommand = new SqlCommand("[sp_SMS_ADD]");
+                sqlCommand.CommandType = CommandType.StoredProcedure;
+                sqlCommand.Parameters.AddWithValue("@ID", Convert.ToInt32(result.Tables[0].Rows[0][0]));
+                sqlCommand.Parameters.AddWithValue("@Phone", phone);
+                sqlCommand.Parameters.AddWithValue("@MSG", msg);
+                sqlCommand.Parameters.AddWithValue("@Result", content);
+                sqlCommand.Parameters.AddWithValue("@UserID", 0);
+                sqlCommand.Parameters.AddWithValue("@New", 0);
+                sqlCommand.Connection = db.databaseConnection;
+                result = db.executeSqlCommand(sqlCommand);
+                db.closeDatabaseConnection();
+            }
+
+            catch (Exception ex)
+            {
+
+            }
+         
         }
     }
 }

@@ -91,7 +91,7 @@ namespace BOR_WS.Services.Registration
                 DataSet result = db.executeSqlCommand(sqlCommand);
                 db.closeDatabaseConnection();
                 response = Fun.GetItem<RegistrationResponse>(result.Tables[0].Rows[0]);
-                if(response.ID == -2)
+                if(response.ID == -2&&response.IsConfirmed==0)
                 {
                     DataSet result1 = new DataSet();
                     string str = "SELECT [ID],[Phone],[ConfirmCode]FROM [CRRB_Service].[dbo].[Customers] where Phone='" + request.Phone + "'";
@@ -105,7 +105,7 @@ namespace BOR_WS.Services.Registration
                         db.closeDatabaseConnection();
                         response.ID = -2;
                         response.Confirmcode = Convert.ToInt32(result1.Tables[0].Rows[0]["ConfirmCode"]);
-                        SendSMS(request.Phone, response.Confirmcode.ToString());
+                        Fun.Sms(response.Confirmcode.ToString(),request.Phone);
                         return response;
                     }
                     catch (Exception ex)
@@ -114,16 +114,11 @@ namespace BOR_WS.Services.Registration
                     }
                 }
 
-
-                try
+                if (response.ID == 1)
                 {
-                    SendSMS(request.Phone, Convert.ToString(response.Confirmcode));
+                    Fun.Sms(Convert.ToString(response.Confirmcode),request.Phone );
                 }
-                catch (Exception ex)
-                {
-
-                    response.Ldesc = ex.Message;
-                }
+              
 
             }
             catch (Exception ex)
@@ -162,96 +157,96 @@ namespace BOR_WS.Services.Registration
                 return false;
             }
         }
-        public bool SendSMS(string phone, string msg)
-        {
-            DataSet result = new DataSet();
-            try
-            {
-                db.openDatabaseConnection();
-                SqlCommand sqlCommand = new SqlCommand("[sp_SMS_ADD]");
-                sqlCommand.CommandType = CommandType.StoredProcedure;
-                sqlCommand.Parameters.AddWithValue("@ID", 0);
-                sqlCommand.Parameters.AddWithValue("@Phone", phone);
-                sqlCommand.Parameters.AddWithValue("@MSG", msg);
-                sqlCommand.Parameters.AddWithValue("@Result", "");
-                sqlCommand.Parameters.AddWithValue("@UserID", 0);
-                sqlCommand.Parameters.AddWithValue("@New", 1);
-                sqlCommand.Connection = db.databaseConnection;
-                result = db.executeSqlCommand(sqlCommand);
-                db.closeDatabaseConnection();
-            }
+        //public bool SendSMS(string phone, string msg)
+        //{
+        //    DataSet result = new DataSet();
+        //    try
+        //    {
+        //        db.openDatabaseConnection();
+        //        SqlCommand sqlCommand = new SqlCommand("[sp_SMS_ADD]");
+        //        sqlCommand.CommandType = CommandType.StoredProcedure;
+        //        sqlCommand.Parameters.AddWithValue("@ID", 0);
+        //        sqlCommand.Parameters.AddWithValue("@Phone", phone);
+        //        sqlCommand.Parameters.AddWithValue("@MSG", msg);
+        //        sqlCommand.Parameters.AddWithValue("@Result", "");
+        //        sqlCommand.Parameters.AddWithValue("@UserID", 0);
+        //        sqlCommand.Parameters.AddWithValue("@New", 1);
+        //        sqlCommand.Connection = db.databaseConnection;
+        //        result = db.executeSqlCommand(sqlCommand);
+        //        db.closeDatabaseConnection();
+        //    }
 
-            catch (Exception ex)
-            {
+        //    catch (Exception ex)
+        //    {
 
-            }
+        //    }
 
-            phone = "2" + phone;
-            string network = phone.Substring(0, 4);
+        //    phone = "2" + phone;
+        //    string network = phone.Substring(0, 4);
 
-            var x = sendsms(msg, phone, Convert.ToInt32(result.Tables[0].Rows[0][0]), network);
+        //    var x = sendsms(msg, phone, Convert.ToInt32(result.Tables[0].Rows[0][0]), network);
 
-            try
-            {
-                db.openDatabaseConnection();
-                SqlCommand sqlCommand = new SqlCommand("[sp_SMS_ADD]");
-                sqlCommand.CommandType = CommandType.StoredProcedure;
-                sqlCommand.Parameters.AddWithValue("@ID", Convert.ToInt32(result.Tables[0].Rows[0][0]));
-                sqlCommand.Parameters.AddWithValue("@Phone", phone);
-                sqlCommand.Parameters.AddWithValue("@MSG", msg);
-                sqlCommand.Parameters.AddWithValue("@Result", x);
-                sqlCommand.Parameters.AddWithValue("@UserID", 0);
-                sqlCommand.Parameters.AddWithValue("@New", 0);
-                sqlCommand.Connection = db.databaseConnection;
-                result = db.executeSqlCommand(sqlCommand);
-                db.closeDatabaseConnection();
-            }
+        //    try
+        //    {
+        //        db.openDatabaseConnection();
+        //        SqlCommand sqlCommand = new SqlCommand("[sp_SMS_ADD]");
+        //        sqlCommand.CommandType = CommandType.StoredProcedure;
+        //        sqlCommand.Parameters.AddWithValue("@ID", Convert.ToInt32(result.Tables[0].Rows[0][0]));
+        //        sqlCommand.Parameters.AddWithValue("@Phone", phone);
+        //        sqlCommand.Parameters.AddWithValue("@MSG", msg);
+        //        sqlCommand.Parameters.AddWithValue("@Result", x);
+        //        sqlCommand.Parameters.AddWithValue("@UserID", 0);
+        //        sqlCommand.Parameters.AddWithValue("@New", 0);
+        //        sqlCommand.Connection = db.databaseConnection;
+        //        result = db.executeSqlCommand(sqlCommand);
+        //        db.closeDatabaseConnection();
+        //    }
 
-            catch (Exception ex)
-            {
+        //    catch (Exception ex)
+        //    {
 
-            }
-            //var client = new RestClient("https://api.ultramsg.com/instance28563/messages/chat");
-            //var request = new RestRequest("", Method.Post);
-            //request.AddHeader("content-type", "application/x-www-form-urlencoded");
-            //request.AddParameter("token", "tb6o11jpueg2ppvy");
-            //request.AddParameter("to", phone);
-            //request.AddParameter("body", msg);
-            //request.AddParameter("priority", "1");
-            //request.AddParameter("referenceId", ParameterType.RequestBody);
-            //var response = client.Execute(request);
-            return true;
-        }
-        public string sendsms(string msg, string mob, int id, string network)
-        {
-            string Oprator;
-            switch (network)
-            {
-                case "2010":
-                    Oprator = "Vodafone";
-                    break;
-                case "2012":
-                    Oprator = "Mobinil";
-                    break;
-                case "2011":
-                    Oprator = "Etisalat";
-                    break;
-                case "2015":
-                    Oprator = "WE";
-                    break;
-                default:
-                    return "Bad Network";
+        //    }
+        //    var client = new RestClient("https://api.ultramsg.com/instance28563/messages/chat");
+        //    var request = new RestRequest("", Method.Post);
+        //    request.AddHeader("content-type", "application/x-www-form-urlencoded");
+        //    request.AddParameter("token", "tb6o11jpueg2ppvy");
+        //    request.AddParameter("to", phone);
+        //    request.AddParameter("body", msg);
+        //    request.AddParameter("priority", "1");
+        //    request.AddParameter("referenceId", ParameterType.RequestBody);
+        //    var response = client.Execute(request);
+        //    return true;
+        //}
+        //public string sendsms(string msg, string mob, int id, string network)
+        //{
+        //    string Oprator;
+        //    switch (network)
+        //    {
+        //        case "2010":
+        //            Oprator = "Vodafone";
+        //            break;
+        //        case "2012":
+        //            Oprator = "Mobinil";
+        //            break;
+        //        case "2011":
+        //            Oprator = "Etisalat";
+        //            break;
+        //        case "2015":
+        //            Oprator = "WE";
+        //            break;
+        //        default:
+        //            return "Bad Network";
 
-            }
-            msg = "رقم التفعيل الخاص بكم هو" + msg;
-            string url = @"http://bulksms.advansystelecom.com/Message_Request.aspx?" +
-                "username=ITDA&password=!TD@P$D&request_id=" + id + "&Mobile_No=" + mob + "&type=2" +
-                "&message=" + msg + "&encoding=2&sender=ITDA" +
-                "&operator=" + Oprator + "";
-            var client = new WebClient();
-            var content = client.DownloadString(url);
-            return content;
-        }
+        //    }
+        //    msg = "رقم التفعيل الخاص بكم هو" + msg;
+        //    string url = @"http://bulksms.advansystelecom.com/Message_Request.aspx?" +
+        //        "username=ITDA&password=!TD@P$D&request_id=" + id + "&Mobile_No=" + mob + "&type=2" +
+        //        "&message=" + msg + "&encoding=2&sender=ITDA" +
+        //        "&operator=" + Oprator + "";
+        //    var client = new WebClient();
+        //    var content = client.DownloadString(url);
+        //    return content;
+        //}
         public ReSendConfirmation ReSendConfirmationCode(string Mob)
         {
             DataSet result = new DataSet();
@@ -273,7 +268,7 @@ namespace BOR_WS.Services.Registration
             ReSendConfirmation response = new ReSendConfirmation();
             response.ID = Convert.ToInt32(result.Tables[0].Rows[0]["ID"]);
             response.Confirmcode = Convert.ToInt32(result.Tables[0].Rows[0]["Confirmcode"]);
-            SendSMS(Mob,Convert.ToString(response.Confirmcode));
+            Fun.Sms(Convert.ToString(response.Confirmcode),Mob);
 
             return response;
 

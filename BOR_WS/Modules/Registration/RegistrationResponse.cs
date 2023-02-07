@@ -12,5 +12,6 @@ namespace BOR_WS.Modules.Registration
         public string Ldesc { get; set; }
         public decimal RecID { get; set; }
         public int Confirmcode { get; set; }
+        public int IsConfirmed { get; set; }
     }
 }
