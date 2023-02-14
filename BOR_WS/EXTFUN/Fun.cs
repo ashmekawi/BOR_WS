@@ -7,6 +7,7 @@ using System.Linq;
 using System.Net;
 using System.Reflection;
 using System.Web;
+using System.Xml.Linq;
 
 namespace BOR_WS.EXTFUN
 {
@@ -39,8 +40,6 @@ namespace BOR_WS.EXTFUN
             }
             return obj;
         }
-
-
         public static void Sms(string msg, string phone)
         {
             string id = "";
@@ -131,6 +130,32 @@ namespace BOR_WS.EXTFUN
 
             }
          
+        }
+
+        public static DataTable XMLTODataTable(string str)
+        {
+            string xmlData = str;
+
+            XElement x = XElement.Parse(xmlData);
+
+            DataTable dt = new DataTable();
+
+            XElement setup = (from p in x.Descendants() select p).First();
+
+            foreach (XElement xe in setup.Descendants()) // build your DataTable
+                dt.Columns.Add(new DataColumn(xe.Name.ToString(), typeof(string))); // add columns to your dt
+
+            var all = from p in x.Descendants(setup.Name.ToString()) select p;
+
+            foreach (XElement xe in all)
+            {
+                DataRow dr = dt.NewRow();
+                foreach (XElement xe2 in xe.Descendants())
+                    dr[xe2.Name.ToString()] = xe2.Value; //add in the values
+                dt.Rows.Add(dr);
+            }
+
+            return dt;
         }
     }
 }

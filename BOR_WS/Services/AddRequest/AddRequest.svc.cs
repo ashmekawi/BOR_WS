@@ -91,7 +91,6 @@ namespace BOR_WS.Services.AddRequest
 
         public GetRequestsResponse GetRequests(GetRequestsRequest request)
         {
-
             try
             {
                 string str = "SELECT ID,RequestTypeDesc,InProgressDesc,CreateDate FROM [dbo].[Request_GetMyRequest] ('" + request.UserID + "',0,0) order by ID desc";
@@ -112,7 +111,7 @@ namespace BOR_WS.Services.AddRequest
                         request1.InProgressDesc = Convert.ToString(dbRow["InProgressDesc"].ToString());
                         request1.RequestTypeDesc = Convert.ToString(dbRow["RequestTypeDesc"].ToString());
                         request1.CreateDate = Convert.ToDateTime(dbRow["CreateDate"].ToString());
-                       
+                        request1.Name0 = GetRequestName(request1.ID,"الإسم/السمة");
 
                         requests.Add(request1);
                     }
@@ -131,10 +130,146 @@ namespace BOR_WS.Services.AddRequest
                 db.closeDatabaseConnection();
                 throw ex;
             }
+        }
+        public Request GetRequestByID(int id)
+        {
+            try
+            {
+                string str = "SELECT CRRB_Request.ID, InProgress.Adesc as InProgressDesc, CRRB_Request.RequestTypeID, CRRB_Request.RequestXML, CRRB_Request.InProgressID, CRRB_Request.CustomerID, CRRB_Request.CreateDate, CRRB_Request.officecode, RequestType.Adesc AS RequestTypeDesc FROM            CRRB_Request INNER JOIN    RequestType ON CRRB_Request.RequestTypeID = RequestType.ID" +
+                    " INNER JOIN  InProgress ON CRRB_Request.InProgressID = InProgress.ID where CRRB_Request.ID='" + id + "'";
+                GetRequestsResponse response = new GetRequestsResponse();
+                Request request = new Request();
+                DataSet dbSet = new DataSet();
+                db.openDatabaseConnection();
+                dbSet = db.executeQuery(str);
+                db.closeDatabaseConnection();
+                if (dbSet.Tables[0].Rows.Count > 0)
+                {
+
+                   
+                        
+                        DataRow dbRow = dbSet.Tables[0].Rows[0];
+                        request.ID = Convert.ToInt32(dbRow["ID"]);
+                        request.InProgressDesc = Convert.ToString(dbRow["InProgressDesc"].ToString());
+                        request.RequestTypeDesc = Convert.ToString(dbRow["RequestTypeDesc"].ToString());
+                        request.CreateDate = Convert.ToDateTime(dbRow["CreateDate"].ToString());
+                        request.Name0 = GetRequestName(request.ID, "الإسم/السمة");
+
+                        
+                    
+                    db.closeDatabaseConnection();
+                  
+                    return request;
+                }
+                else
+                {
+                    db.closeDatabaseConnection();
+                    throw new DBException(404, "لا يوجد منشئات لهذا الرقم القومي");
+                }
+            }
+            catch (Exception ex)
+            {
+                db.closeDatabaseConnection();
+                throw ex;
+            }
+        }
+        public string GetRequestName(int ID, string Type)
+        {
+            string str = "SELECT ID,RequestTypeDesc,InProgressDesc,CreateDate FROM [dbo].[Request_GetMyRequest]  order by ID desc";
+
+            switch (Type)
+            {
+                case "الإسم/السمة":
+                    str = "SELECT top(1) isnull(ActValue,'') FROM [dbo].[Request_GetRequestInfo](" + ID + ",0)where lbl='الإسم/السمة'";
+                    break;
+                case "قيد مالك مستفيد":
+                    str = "SELECT top(1) isnull(ActValue,'') FROM [dbo].[Request_GetRequestInfo](" + ID + ",0)where lbl='الإسم/السمة'";
+                    break;
+                default:
+                    break;
+            }
+
+
+            try
+            {
+                GetRequestsResponse response = new GetRequestsResponse();
+                List<Request> requests = new List<Request>();
+                DataSet dbSet = new DataSet();
+                db.openDatabaseConnection();
+                dbSet = db.executeQuery(str);
+                db.closeDatabaseConnection();
+                if (dbSet.Tables[0].Rows.Count > 0)
+                {
 
 
 
-            
+                    DataRow dbRow = dbSet.Tables[0].Rows[0];
+                    return dbRow[0].ToString();
+
+                   
+
+                }
+                else
+                {
+                    db.closeDatabaseConnection();
+
+                }
+            }
+            catch (Exception ex)
+            {
+                db.closeDatabaseConnection();
+                throw ex;
+            }
+
+            return "";
+
+        }
+
+
+        public GetRequestHistoryResponse GetRequestHistory(int requestid)
+        {
+            GetRequestHistoryResponse response = new GetRequestHistoryResponse();
+            response.request = GetRequestByID(requestid);
+
+            try
+            {
+                string str = "SELECT * FROM [dbo].[Request_GetRequestAudit] ("+ requestid +")";
+               
+                List<RequestHistory> list = new List<RequestHistory>();
+                DataSet dbSet = new DataSet();
+                db.openDatabaseConnection();
+                dbSet = db.executeQuery(str);
+                db.closeDatabaseConnection();
+                if (dbSet.Tables[0].Rows.Count > 0)
+                {
+
+                    for (int i = 0; i < dbSet.Tables[0].Rows.Count; i++)
+                    {
+                        RequestHistory request1 = new RequestHistory();
+                        DataRow dbRow = dbSet.Tables[0].Rows[i];
+                        request1.InProgressID = Convert.ToInt32(dbRow["InProgressID"]);
+                        request1.Seq = Convert.ToInt32(dbRow["Seq"].ToString());
+                        request1.indate = Convert.ToDateTime(dbRow["indate"].ToString());
+                        request1.IDTypeDesc = Convert.ToString(dbRow["IDTypeDesc"].ToString());
+                      
+
+                        list.Add(request1);
+                    }
+                    db.closeDatabaseConnection();
+                    response.requestHistories = list;
+                    return response;
+                }
+                else
+                {
+                    db.closeDatabaseConnection();
+                    return response;
+                }
+            }
+            catch (Exception ex)
+            {
+                db.closeDatabaseConnection();
+                throw ex;
+            }
         }
     }
 }
