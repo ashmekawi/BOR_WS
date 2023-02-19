@@ -14,7 +14,6 @@ namespace BOR_WS.Services.CRA
     {
         [OperationContract]
         GetCompanyInfoNIDResponse GetCompanyInfoNIDResponse(GetCompanyInfoNIDRequest GetCompanyInfoNIDRequest);
-        int GetBOI(string UCR);
         [OperationContract]
         GetCompanyDataResponse GetCompanyDataResponse(string UCR);
         [OperationContract]

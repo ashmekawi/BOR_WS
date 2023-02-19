@@ -30,86 +30,18 @@ namespace BOR_WS.Services.CRA
 
             }
             return response;
-
         }
         public GetCompanyDataResponse GetCompanyDataResponse(string UCR)
         {
             GetCompanyDataResponse response = new GetCompanyDataResponse();
-            try
-            {
-                SqlCommand sqlCommand = new SqlCommand();
-                sqlCommand.CommandText = "SELECT * FROM [dbo].[Fn_getCapitalByUCR] (@ucr)";
-                sqlCommand.CommandType = CommandType.Text;
-                sqlCommand.Parameters.Add(new SqlParameter("@ucr", UCR));
-                response.Company = GetCompanyData(sqlCommand);
-
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
+            response.Company = db1.Database.SqlQuery<CompanyData>("SELECT * FROM [dbo].[Fn_getCapitalByUCR] ('"+UCR+"')").FirstOrDefault();
+            response.Company.capitals = db1.Database.SqlQuery<Capital>("SELECT * FROM [dbo].[Fn_getCapitalByUCR] ('" + UCR + "')").ToList();
             response.ResponseCode = 200;
             response.ResponseMessage = "Sucsess";
             return response;
 
 
 
-        }
-        public CompanyData GetCompanyData(SqlCommand sqlCommand)
-        {
-            CompanyData companyData = new CompanyData();
-            CRADB dbManager = new CRADB();
-            dbManager.openDatabaseConnection();
-            try
-            {
-                DataSet dbSet = new DataSet();
-                sqlCommand.Connection = dbManager.databaseConnection;
-                sqlCommand.CommandTimeout = 0;
-                dbSet = dbManager.executeSqlCommand(sqlCommand);
-                companyData.CRA_NUM = dbSet.Tables[0].Rows[0]["CRA_NUM"].ToString();
-                companyData.TAX_NUM = dbSet.Tables[0].Rows[0]["ID_NUMBER"].ToString();
-                companyData.DATE0 = Convert.ToDateTime(dbSet.Tables[0].Rows[0]["date0"]);
-                companyData.UCR = dbSet.Tables[0].Rows[0]["UCR"].ToString();
-                if (dbSet.Tables[0].Rows.Count > 0)
-                {
-                    List<Capital> capitals = new List<Capital>();
-                    for (int i = 0; i < dbSet.Tables[0].Rows.Count; i++)
-                    {
-                        Capital capital = new Capital();
-                        DataRow dbRow = dbSet.Tables[0].Rows[i];
-                        capital.Value = Convert.ToInt32(dbRow["VALUE0"]);
-                        capital.Code = Convert.ToInt32(dbRow["CapitalTypeCode"]);
-                        capital.Desc = Convert.ToString(dbRow["CapitalTypeDesc"]);
-                        capital.CurrencyCode = Convert.ToInt32(dbRow["CurrencyCode"]);
-                        capital.CurrencyDesc = Convert.ToString(dbRow["CurrencyDesc"]);
-
-                        capitals.Add(capital);
-                    }
-                    dbManager.closeDatabaseConnection();
-                    companyData.capitals = capitals;
-                    return companyData;
-                }
-                else
-                {
-                    dbManager.closeDatabaseConnection();
-                    //  throw new DBException(404, "لا يوجد منشئات لهذا الرقم القومي");
-                }
-            }
-            catch (Exception ex)
-            {
-                dbManager.closeDatabaseConnection();
-                throw ex;
-            }
-
-
-
-
-
-            return companyData;
-        }
-        public int GetBOI(string UCR)
-        {
-            return 5;
         }
         public Co_GetMainData2BOI GetMainData2BOI(string UCR)
         {
