@@ -1,4 +1,5 @@
 ﻿using BOR_WS.DataBase;
+using BOR_WS.EXTFUN;
 using BOR_WS.Modules.CRA;
 using System;
 using System.Collections.Generic;
@@ -15,66 +16,20 @@ namespace BOR_WS.Services.CRA
     // NOTE: In order to launch WCF Test Client for testing this service, please select GetLegals.svc or GetLegals.svc.cs at the Solution Explorer and start debugging.
     public class GetLegals : IGetLegals
     {
+        CRRB_ServiceContext db = new CRRB_ServiceContext();
+        CRA00Context db1 = new CRA00Context();
         public GetCompanyInfoNIDResponse GetCompanyInfoNIDResponse(GetCompanyInfoNIDRequest GetCompanyInfoNIDRequest)
         {
+            List<Companies> companies = new List<Companies>();
+            companies = db.Database.SqlQuery<Companies>("SELECT * FROM [dbo].[CRRB_GetBOI_ByNID] ('" + GetCompanyInfoNIDRequest.citizenNationalId + "')").ToList();
             GetCompanyInfoNIDResponse response = new GetCompanyInfoNIDResponse();
-            try
+            response.Companies = db1.Database.SqlQuery<Companies>("SELECT * FROM [dbo].[Fn_Por_GetDataByNID] ('" + GetCompanyInfoNIDRequest.citizenNationalId + "')").ToList();
+            if (companies.Count > 0)
             {
-                SqlCommand sqlCommand = new SqlCommand();
-                sqlCommand.CommandText = "SELECT * FROM [dbo].[Fn_Por_GetDataByNID] (@Nid)";
-                sqlCommand.CommandType = CommandType.Text;
-                sqlCommand.Parameters.Add(new SqlParameter("@NID", GetCompanyInfoNIDRequest.citizenNationalId));
-                response.Companies = GetCompaniesInformation(sqlCommand);
-                return response;
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-        }
-        public List<Companies> GetCompaniesInformation(SqlCommand sqlCommand)
-        {
-            CRADB dbManager = new CRADB();
-            dbManager.openDatabaseConnection();
-            try
-            {
-                List<Companies> companiesInformation = new List<Companies>();
-                DataSet dbSet = new DataSet();
-                sqlCommand.Connection = dbManager.databaseConnection;
-                sqlCommand.CommandTimeout = 0;
-                dbSet = dbManager.executeSqlCommand(sqlCommand);
+                response.Companies.AddRange(companies);
 
-                if (dbSet.Tables[0].Rows.Count > 0)
-                {
-
-                    for (int i = 0; i < dbSet.Tables[0].Rows.Count; i++)
-                    {
-                        Companies companyInformation = new Companies();
-                        DataRow dbRow = dbSet.Tables[0].Rows[i];
-                        companyInformation.CoName = dbRow["CoName"].ToString();
-                        companyInformation.Registration_No = dbRow["Registration_No"].ToString();
-                        companyInformation.OfficeName = dbRow["OfficeName"].ToString();
-                        companyInformation.UCR = dbRow["UCR"].ToString();
-                        companyInformation.Date0 = dbRow["Date0"].ToString();
-                        companyInformation.RenStatus = dbRow["RenStatus"].ToString();
-                        companyInformation.BorStatus = dbRow["BorStatus"].ToString();
-
-                        companiesInformation.Add(companyInformation);
-                    }
-                    dbManager.closeDatabaseConnection();
-                    return companiesInformation;
-                }
-                else
-                {
-                    dbManager.closeDatabaseConnection();
-                    throw new DBException(404, "لا يوجد منشئات لهذا الرقم القومي");
-                }
             }
-            catch (Exception ex)
-            {
-                dbManager.closeDatabaseConnection();
-                throw ex;
-            }
+            return response;
 
         }
         public GetCompanyDataResponse GetCompanyDataResponse(string UCR)

@@ -14,5 +14,7 @@ namespace BOR_WS.Services.GetLookup
     {
         [OperationContract]
         GetLookupResponse GetLookupResponse(GetLookupRequest request);
+        [OperationContract]
+        AddOwnerLookUps AddOwnerLookUp();
     }
 }

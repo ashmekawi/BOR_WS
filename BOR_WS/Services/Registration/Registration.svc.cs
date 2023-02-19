@@ -84,7 +84,13 @@ namespace BOR_WS.Services.Registration
                 SqlCommand sqlCommand = new SqlCommand("[sp_Customers_ADD]");
                 sqlCommand.CommandType = CommandType.StoredProcedure;
                 sqlCommand.Parameters.AddWithValue("@NID", request.IDNumber);
-                sqlCommand.Parameters.AddWithValue("@Name0", name0);
+                sqlCommand.Parameters.AddWithValue("@Name1", request.FristName);
+                sqlCommand.Parameters.AddWithValue("@Name2", request.SecondName);
+                sqlCommand.Parameters.AddWithValue("@Name3", request.ThirdName);
+                sqlCommand.Parameters.AddWithValue("@Name4", request.FourthName);
+                sqlCommand.Parameters.AddWithValue("@IDType", 1);
+                sqlCommand.Parameters.AddWithValue("@NATION_TYPEID", 1);
+                sqlCommand.Parameters.AddWithValue("@NATIONALITYID", 13818);
                 sqlCommand.Parameters.AddWithValue("@Phone", request.Phone);
                 sqlCommand.Parameters.AddWithValue("@CustPassWord", "Null");
                 sqlCommand.Connection = db.databaseConnection;

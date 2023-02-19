@@ -157,5 +157,42 @@ namespace BOR_WS.EXTFUN
 
             return dt;
         }
+
+        public static int CRATOBOIRequest(string UCR,int UserID)
+        {
+            CRADB db = new CRADB();
+            try
+            {
+              
+                db.openDatabaseConnection();
+                string str = "SELECT [dbo].[CRA00_GetCRANum] ('"+UCR+"')";
+                DataSet result = db.executeQuery(str);
+                db.closeDatabaseConnection();
+                string xml = "select * from [dbo].[CRA00_GetCoData2CRRB_Request]('"+ result.Tables[0].Rows[0][0] +"')";
+                db.openDatabaseConnection();
+                DataSet xmlresult = db.executeQuery(xml);
+                db.closeDatabaseConnection();
+                DBMan dBMan = new DBMan();
+                dBMan.openDatabaseConnection();
+                SqlCommand sqlCommand = new SqlCommand("[sp_CRRB_Request_ADD]");
+                sqlCommand.CommandType = CommandType.StoredProcedure;
+                sqlCommand.Parameters.AddWithValue("@RequestTypeID", 2);
+                sqlCommand.Parameters.AddWithValue("@OfficeCode", 0);
+                sqlCommand.Parameters.AddWithValue("@RequestXML", xmlresult.Tables[0].Rows[0][0].ToString());
+                sqlCommand.Parameters.AddWithValue("@CustomerID", UserID);
+             
+                sqlCommand.Connection = dBMan.databaseConnection;
+                DataSet result1 = dBMan.executeSqlCommand(sqlCommand);
+                dBMan.closeDatabaseConnection();
+                return Convert.ToInt32(result1.Tables[1].Rows[0][0]);
+                
+            }
+            catch (Exception ex)
+            {
+                db.closeDatabaseConnection();
+                throw ex;
+            }
+            return 1;
+        }
     }
 }

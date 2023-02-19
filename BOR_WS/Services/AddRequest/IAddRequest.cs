@@ -1,4 +1,5 @@
 ﻿using BOR_WS.Modules.AddRequest;
+using BOR_WS.Modules.GetLookup;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -22,8 +23,10 @@ namespace BOR_WS.Services.AddRequest
         GetRequestsResponse GetRequests(GetRequestsRequest request);
         [OperationContract]
         GetRequestHistoryResponse GetRequestHistory(int requestid);
+     
 
-       
+
+
 
 
     }

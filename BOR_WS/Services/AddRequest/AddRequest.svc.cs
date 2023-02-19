@@ -1,6 +1,7 @@
 ﻿using BOR_WS.DataBase;
 using BOR_WS.EXTFUN;
 using BOR_WS.Modules.AddRequest;
+using BOR_WS.Modules.GetLookup;
 using BOR_WS.ValidationManager.AddRequest;
 using System;
 using System.Collections.Generic;
@@ -10,6 +11,8 @@ using System.Linq;
 using System.Runtime.Serialization;
 using System.ServiceModel;
 using System.Text;
+using System.Threading.Tasks;
+using System.Xml.Linq;
 
 namespace BOR_WS.Services.AddRequest
 {
@@ -17,11 +20,31 @@ namespace BOR_WS.Services.AddRequest
     // NOTE: In order to launch WCF Test Client for testing this service, please select AddRequest.svc or AddRequest.svc.cs at the Solution Explorer and start debugging.
     public class AddRequest : IAddRequest
     {
+        CRRB_ServiceContext servicedb = new CRRB_ServiceContext();
         DBMan db = new DBMan();
         public AddRequestResponse AddNewRequest(AddRequestRequest request)
         {
 
             AddRequestResponse response = new AddRequestResponse();
+            if (request.RequestTypeID == 2)
+            {
+
+                XDocument xdoc = XDocument.Parse(request.RequestXML);
+                var UCR = xdoc.Descendants("CRAInfo__UCR").First()?.Value;
+                //var UCR = "105300000183051";
+                int x = Fun.CRATOBOIRequest(UCR,request.CustomerID);
+                // Task task = new Task(Fun.CRATOBOIRequest(UCR));
+                AddSubRequestRequest addSub = new AddSubRequestRequest();
+                addSub.RequestID = x;
+                addSub.Txt = request.RequestXML;
+                addSub.SubRequestTypeID = 2;
+                AddSubRequest(addSub);
+                response.RequestID = Convert.ToInt32(x);
+                response.ResponseCode = 200;
+                response.responseMSG = "تم التنفيذ";
+                return response;
+                
+            }
 
 
             try
@@ -47,7 +70,6 @@ namespace BOR_WS.Services.AddRequest
             }
             return response;
         }
-
         public AddSubRequestResponse AddSubRequest(AddSubRequestRequest request)
         {
             AddSubRequestResponse response = new AddSubRequestResponse();
@@ -73,7 +95,6 @@ namespace BOR_WS.Services.AddRequest
             }
             return response;
         }
-
         public int RequestCount(int UserID)
         {
 
@@ -86,14 +107,11 @@ namespace BOR_WS.Services.AddRequest
 
             return Convert.ToInt32(dbSet.Tables[0].Rows[0][0]);
         }
-
-
-
         public GetRequestsResponse GetRequests(GetRequestsRequest request)
         {
             try
             {
-                string str = "SELECT ID,RequestTypeDesc,InProgressDesc,CreateDate FROM [dbo].[Request_GetMyRequest] ('" + request.UserID + "',0,0) order by ID desc";
+                string str = "SELECT * FROM [dbo].[Request_GetMyRequest] ('" + request.UserID + "',0,0) order by ID desc";
                 GetRequestsResponse response = new GetRequestsResponse();
                 List<Request> requests = new List<Request>();
                 DataSet dbSet = new DataSet();
@@ -111,7 +129,19 @@ namespace BOR_WS.Services.AddRequest
                         request1.InProgressDesc = Convert.ToString(dbRow["InProgressDesc"].ToString());
                         request1.RequestTypeDesc = Convert.ToString(dbRow["RequestTypeDesc"].ToString());
                         request1.CreateDate = Convert.ToDateTime(dbRow["CreateDate"].ToString());
-                        request1.Name0 = GetRequestName(request1.ID,"الإسم/السمة");
+                        XDocument xdoc = XDocument.Parse(dbRow["RequestXML"].ToString());
+                        try
+                        {
+                            request1.Name0 = xdoc.Descendants("BOI_Name__CoName").First()?.Value;
+                        }
+                        catch (Exception)
+                        {
+                            request1.Name0 = "لا يوجد";
+
+
+                        }
+                       
+                        //request1.Name0 = GetRequestName(request1.ID,"الإسم/السمة");
 
                         requests.Add(request1);
                     }
@@ -153,7 +183,9 @@ namespace BOR_WS.Services.AddRequest
                         request.InProgressDesc = Convert.ToString(dbRow["InProgressDesc"].ToString());
                         request.RequestTypeDesc = Convert.ToString(dbRow["RequestTypeDesc"].ToString());
                         request.CreateDate = Convert.ToDateTime(dbRow["CreateDate"].ToString());
-                        request.Name0 = GetRequestName(request.ID, "الإسم/السمة");
+                    XDocument xdoc = XDocument.Parse(dbSet.Tables[0].Rows[0]["RequestXML"].ToString());
+                    request.Name0 = xdoc.Descendants("BOI_Name__CoName").First()?.Value;
+                    //request.Name0 = GetRequestName(request.ID, "الإسم/السمة");
 
                         
                     
@@ -173,59 +205,6 @@ namespace BOR_WS.Services.AddRequest
                 throw ex;
             }
         }
-        public string GetRequestName(int ID, string Type)
-        {
-            string str = "SELECT ID,RequestTypeDesc,InProgressDesc,CreateDate FROM [dbo].[Request_GetMyRequest]  order by ID desc";
-
-            switch (Type)
-            {
-                case "الإسم/السمة":
-                    str = "SELECT top(1) isnull(ActValue,'') FROM [dbo].[Request_GetRequestInfo](" + ID + ",0)where lbl='الإسم/السمة'";
-                    break;
-                case "قيد مالك مستفيد":
-                    str = "SELECT top(1) isnull(ActValue,'') FROM [dbo].[Request_GetRequestInfo](" + ID + ",0)where lbl='الإسم/السمة'";
-                    break;
-                default:
-                    break;
-            }
-
-
-            try
-            {
-                GetRequestsResponse response = new GetRequestsResponse();
-                List<Request> requests = new List<Request>();
-                DataSet dbSet = new DataSet();
-                db.openDatabaseConnection();
-                dbSet = db.executeQuery(str);
-                db.closeDatabaseConnection();
-                if (dbSet.Tables[0].Rows.Count > 0)
-                {
-
-
-
-                    DataRow dbRow = dbSet.Tables[0].Rows[0];
-                    return dbRow[0].ToString();
-
-                   
-
-                }
-                else
-                {
-                    db.closeDatabaseConnection();
-
-                }
-            }
-            catch (Exception ex)
-            {
-                db.closeDatabaseConnection();
-                throw ex;
-            }
-
-            return "";
-
-        }
-
-
         public GetRequestHistoryResponse GetRequestHistory(int requestid)
         {
             GetRequestHistoryResponse response = new GetRequestHistoryResponse();
@@ -271,6 +250,7 @@ namespace BOR_WS.Services.AddRequest
                 throw ex;
             }
         }
+    
     }
 }
 

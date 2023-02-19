@@ -1,4 +1,5 @@
 ﻿using BOR_WS.DataBase;
+using BOR_WS.EXTFUN;
 using BOR_WS.Modules.GetLookup;
 using System;
 using System.Collections.Generic;
@@ -15,6 +16,7 @@ namespace BOR_WS.Services.GetLookup
     // NOTE: In order to launch WCF Test Client for testing this service, please select GetLookup.svc or GetLookup.svc.cs at the Solution Explorer and start debugging.
     public class GetLookup : IGetLookup
     {
+        CRRB_ServiceContext servicedb = new CRRB_ServiceContext();
         //SELECT * FROM [dbo].[CRRB_GetLockup] ('activities',0)
         public GetLookupResponse GetLookupResponse(GetLookupRequest request)
         {
@@ -75,5 +77,18 @@ namespace BOR_WS.Services.GetLookup
             }
 
         }
+
+        public AddOwnerLookUps AddOwnerLookUp()
+        {
+            AddOwnerLookUps AddOwnerLookUps = new AddOwnerLookUps();
+            AddOwnerLookUps.NATIONALITY = servicedb.Database.SqlQuery<Lookup>("SELECT * FROM [dbo].[CRRB_GetLockup] ('NATIONALITY' ,0)").ToList();
+            AddOwnerLookUps.PerIDType = servicedb.Database.SqlQuery<Lookup>("SELECT * FROM [dbo].[CRRB_GetLockup] ('PerIDType' ,0)").ToList();
+            AddOwnerLookUps.RightVote = servicedb.Database.SqlQuery<Lookup>("SELECT * FROM [dbo].[CRRB_GetLockup] ('RightVote' ,0)").ToList();
+            AddOwnerLookUps.Contactype = servicedb.Database.SqlQuery<Lookup>("SELECT * FROM[dbo].[CRRB_GetLockup]('Contactype', 0)").ToList();
+            return AddOwnerLookUps;
+        }
+
+
+
     }
 }
