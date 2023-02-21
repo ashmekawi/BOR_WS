@@ -7,7 +7,7 @@ namespace BOR_WS.Modules.CRA
 {
     public class Co_GetMainData2BOI
     {
-        public string BOI__UCR { get; set; }
+        public decimal BOI__UCR { get; set; }
         public string BOI__RegDate { get; set; }
         public string BOI_TaxRegDate { get; set; }
         public string BOI__IssueLawDesc { get; set; }

@@ -28,12 +28,9 @@ namespace BOR_WS.Services.AddRequest
             AddRequestResponse response = new AddRequestResponse();
             if (request.RequestTypeID == 2)
             {
-
                 XDocument xdoc = XDocument.Parse(request.RequestXML);
                 var UCR = xdoc.Descendants("CRAInfo__UCR").First()?.Value;
-                //var UCR = "105300000183051";
                 int x = Fun.CRATOBOIRequest(UCR,request.CustomerID);
-                // Task task = new Task(Fun.CRATOBOIRequest(UCR));
                 AddSubRequestRequest addSub = new AddSubRequestRequest();
                 addSub.RequestID = x;
                 addSub.Txt = request.RequestXML;
@@ -42,11 +39,8 @@ namespace BOR_WS.Services.AddRequest
                 response.RequestID = Convert.ToInt32(x);
                 response.ResponseCode = 200;
                 response.responseMSG = "تم التنفيذ";
-                return response;
-                
+                return response; 
             }
-
-
             try
             {
                 db.openDatabaseConnection();
@@ -59,7 +53,7 @@ namespace BOR_WS.Services.AddRequest
                 sqlCommand.Connection = db.databaseConnection;
                 DataSet result = db.executeSqlCommand(sqlCommand);
                 db.closeDatabaseConnection();
-                response.RequestID = Convert.ToInt32(result.Tables[1].Rows[0][0]);
+                response.RequestID = Convert.ToInt32(result.Tables[0].Rows[0][0]);
                 response.ResponseCode = 200;
                 response.responseMSG = "تم التنفيذ";
             }
@@ -183,8 +177,17 @@ namespace BOR_WS.Services.AddRequest
                         request.InProgressDesc = Convert.ToString(dbRow["InProgressDesc"].ToString());
                         request.RequestTypeDesc = Convert.ToString(dbRow["RequestTypeDesc"].ToString());
                         request.CreateDate = Convert.ToDateTime(dbRow["CreateDate"].ToString());
-                    XDocument xdoc = XDocument.Parse(dbSet.Tables[0].Rows[0]["RequestXML"].ToString());
-                    request.Name0 = xdoc.Descendants("BOI_Name__CoName").First()?.Value;
+                    try
+                    {
+                        XDocument xdoc = XDocument.Parse(dbSet.Tables[0].Rows[0]["RequestXML"].ToString());
+                        request.Name0 = xdoc.Descendants("BOI_Name__CoName").First()?.Value;
+                    }
+                    catch (Exception)
+                    {
+                         
+                        
+                    }
+                  
                     //request.Name0 = GetRequestName(request.ID, "الإسم/السمة");
 
                         
@@ -250,7 +253,56 @@ namespace BOR_WS.Services.AddRequest
                 throw ex;
             }
         }
-    
+        public int RequestFiles(List<File> files)
+        {
+            foreach (var item in files)
+            {
+                string cmd= "[SP_CRRB_RequestAttachment_AddDoc]  @RequestID, @Seq  , @Fdata  , @FExtType  , @DocTypeID  , @ID_Number  , @NationalityID ";
+                List<SqlParameter> sqlParameters = new List<SqlParameter>();
+                SqlParameter sqlParameter = new SqlParameter();
+                sqlParameter.ParameterName = "@RequestID";
+                sqlParameter.Value = item.RequestID;
+                SqlParameter sqlParameter2 = new SqlParameter();
+                sqlParameter2.ParameterName = "@Seq";
+                sqlParameter2.Value = item.Seq;
+                SqlParameter sqlParameter3 = new SqlParameter();
+                sqlParameter3.ParameterName = "@Fdata";
+                sqlParameter3.Value = item.FData;
+                SqlParameter sqlParameter4 = new SqlParameter();
+                sqlParameter4.ParameterName = "@FExtType";
+                int x = servicedb.Database.SqlQuery<int>("SELECT [ID] FROM [CRRB_Service].[dbo].[FExtType] where Adesc = '" + item.FExtType + "' ").FirstOrDefault();
+                sqlParameter4.Value =x;
+                SqlParameter sqlParameter5 = new SqlParameter();
+                sqlParameter5.ParameterName = "@DocTypeID";
+                sqlParameter5.Value = item.DocTypeID;
+                SqlParameter sqlParameter6 = new SqlParameter();
+                sqlParameter6.ParameterName = "@NationalityID";
+                sqlParameter6.Value = 0;
+                SqlParameter sqlParameter7 = new SqlParameter();
+                sqlParameter7.ParameterName = "@ID_Number";
+                sqlParameter7.Value = "0";
+                sqlParameters.Add(sqlParameter);
+                sqlParameters.Add(sqlParameter2);
+                sqlParameters.Add(sqlParameter3);
+                sqlParameters.Add(sqlParameter4);
+                sqlParameters.Add(sqlParameter5);
+                sqlParameters.Add(sqlParameter6);
+                sqlParameters.Add(sqlParameter7);
+                try
+                {
+                    var xx = servicedb.Database.ExecuteSqlCommand(cmd, sqlParameters.ToArray());
+                   
+                }
+                catch (Exception ex)
+                {
+
+                    throw ex;
+                }
+
+               
+            }
+            return 1;
+        }
     }
 }
 

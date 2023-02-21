@@ -126,6 +126,7 @@
     <Compile Include="Modules\AddRequest\AddRequestResponse.cs" />
     <Compile Include="Modules\AddRequest\AddSubRequestRequest.cs" />
     <Compile Include="Modules\AddRequest\AddSubRequestResponse.cs" />
+    <Compile Include="Modules\AddRequest\File.cs" />
     <Compile Include="Modules\AddRequest\GetRequestHistoryResponse.cs" />
     <Compile Include="Modules\AddRequest\GetRequestsRequest.cs" />
     <Compile Include="Modules\AddRequest\GetRequestsResponse.cs" />

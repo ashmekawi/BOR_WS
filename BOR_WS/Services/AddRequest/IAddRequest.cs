@@ -23,8 +23,8 @@ namespace BOR_WS.Services.AddRequest
         GetRequestsResponse GetRequests(GetRequestsRequest request);
         [OperationContract]
         GetRequestHistoryResponse GetRequestHistory(int requestid);
-     
-
+        [OperationContract]
+        int RequestFiles(List<File> files);
 
 
 

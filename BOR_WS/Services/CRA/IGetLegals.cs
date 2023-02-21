@@ -18,5 +18,7 @@ namespace BOR_WS.Services.CRA
         GetCompanyDataResponse GetCompanyDataResponse(string UCR);
         [OperationContract]
         Co_GetMainData2BOI GetMainData2BOI(string UCR);
+        [OperationContract]
+        int GetBOI(string UCR);
     }
 }

@@ -85,6 +85,11 @@ namespace BOR_WS.Services.GetLookup
             AddOwnerLookUps.PerIDType = servicedb.Database.SqlQuery<Lookup>("SELECT * FROM [dbo].[CRRB_GetLockup] ('PerIDType' ,0)").ToList();
             AddOwnerLookUps.RightVote = servicedb.Database.SqlQuery<Lookup>("SELECT * FROM [dbo].[CRRB_GetLockup] ('RightVote' ,0)").ToList();
             AddOwnerLookUps.Contactype = servicedb.Database.SqlQuery<Lookup>("SELECT * FROM[dbo].[CRRB_GetLockup]('Contactype', 0)").ToList();
+            AddOwnerLookUps.Bank = servicedb.Database.SqlQuery<Lookup>("SELECT * FROM[dbo].[CRRB_GetLockup]('Bank', 0)").ToList();
+            AddOwnerLookUps.DOCType = servicedb.Database.SqlQuery<Lookup>("SELECT [ID]      ,[Adesc]    FROM [CRRB_Service].[dbo].[DocType]").ToList();
+            AddOwnerLookUps.ShareType = servicedb.Database.SqlQuery<Lookup>("SELECT * FROM[dbo].[CRRB_GetLockup]('ShareType', 0)").ToList();
+            AddOwnerLookUps.PersonAdrsType = servicedb.Database.SqlQuery<Lookup>("SELECT * FROM[dbo].[CRRB_GetLockup]('PersonAdrsType', 0)").ToList();
+            AddOwnerLookUps.Stockmarket = servicedb.Database.SqlQuery<Lookup>("SELECT * FROM[dbo].[CRRB_GetLockup]('Stockmarket', 0)").ToList();
             return AddOwnerLookUps;
         }
 
