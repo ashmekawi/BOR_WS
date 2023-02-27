@@ -52,10 +52,12 @@ namespace BOR_WS.Services.CRA
             data2BOI.Co_GetCapital2BOI = capital2BOIs;
             return data2BOI;
         }
-        public int GetBOI(string UCR)
+        public GetBOIResponse GetBOI(string UCR)
         {
-            return Convert.ToInt32(db.Database.SqlQuery<string>("SELECT [dbo].[GetBOIByUCR] ('"+ UCR +"')").FirstOrDefault());
-            
+            GetBOIResponse response = new GetBOIResponse();
+            response.BOI =  Convert.ToInt32(db.Database.SqlQuery<string>("SELECT [dbo].[GetBOIByUCR] ('"+ UCR +"')").FirstOrDefault());
+            response.CountOwner =  Convert.ToInt32(db.Database.SqlQuery<string>("SELECT [dbo].[GetCountOwner](" + response.BOI +")").FirstOrDefault());
+            return response;
         }
     }
 }

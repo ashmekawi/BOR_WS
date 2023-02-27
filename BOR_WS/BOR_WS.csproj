@@ -139,6 +139,7 @@
     <Compile Include="Modules\CRA\CompanyData.cs" />
     <Compile Include="Modules\CRA\Co_GetCapital2BOI.cs" />
     <Compile Include="Modules\CRA\Co_GetMainData2BOI.cs" />
+    <Compile Include="Modules\CRA\GetBOIResponse.cs" />
     <Compile Include="Modules\CRA\GetCompanyDataResponse.cs" />
     <Compile Include="Modules\CRA\GetCompanyInfoNIDRequest.cs" />
     <Compile Include="Modules\CRA\GetCompanyInfoNIDResponse.cs" />

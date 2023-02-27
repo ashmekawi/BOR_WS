@@ -303,6 +303,11 @@ namespace BOR_WS.Services.AddRequest
             }
             return 1;
         }
+        public int AddOwnerCheck(string NID, string BOI,int NATIONALITYID, int BIRTHDATE)
+        {
+            int x =Convert.ToInt32(servicedb.Database.SqlQuery<int>("SELECT * FROM [dbo].[BOI_Person_GetStatus] ("+BOI+",'"+NID+"',"+ NATIONALITYID + ","+ BIRTHDATE + ")").FirstOrDefault());
+            return 1;
+        }
     }
 }
 
