@@ -166,7 +166,7 @@ namespace BOR_WS.EXTFUN
                 CRRB_ServiceContext CRRBDB = new CRRB_ServiceContext();
                 int CRANum = CRA00.Database.SqlQuery<int>("SELECT [dbo].[CRA00_GetCRANum] ('" + UCR + "')").FirstOrDefault();
                 string xml = CRA00.Database.SqlQuery<string>("select * from [dbo].[CRA00_GetCoData2CRRB_Request]('" + CRANum + "')").FirstOrDefault().ToString();
-                string cmd = "EXECUTE  [dbo].[sp_CRRB_Request_ADD] 2,'"+xml+"',0,'"+ UserID +"'";
+                string cmd = "EXECUTE  [dbo].[sp_CRRB_Request_ADD] 1,'"+xml+"',0,'"+ UserID +"'";
                 int x =Convert.ToInt32(CRRBDB.Database.SqlQuery<decimal>(cmd).FirstOrDefault());
                 return x;
             }

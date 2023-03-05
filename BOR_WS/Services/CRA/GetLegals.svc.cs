@@ -56,7 +56,7 @@ namespace BOR_WS.Services.CRA
         {
             GetBOIResponse response = new GetBOIResponse();
             response.BOI =  Convert.ToInt32(db.Database.SqlQuery<string>("SELECT [dbo].[GetBOIByUCR] ('"+ UCR +"')").FirstOrDefault());
-            response.CountOwner =  Convert.ToInt32(db.Database.SqlQuery<string>("SELECT [dbo].[GetCountOwner](" + response.BOI +")").FirstOrDefault());
+            response.CountOwner =  Convert.ToInt32(db.Database.SqlQuery<int>("SELECT [dbo].[GetCountOwner](" + response.BOI +")").FirstOrDefault());
             return response;
         }
     }

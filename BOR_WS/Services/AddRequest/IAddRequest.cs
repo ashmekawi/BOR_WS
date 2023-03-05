@@ -25,6 +25,8 @@ namespace BOR_WS.Services.AddRequest
         GetRequestHistoryResponse GetRequestHistory(int requestid);
         [OperationContract]
         int RequestFiles(List<File> files);
+        [OperationContract]
+        int AddOwnerCheck(string NID, string BOI, int NATIONALITYID, int BIRTHDATE);
 
 
 

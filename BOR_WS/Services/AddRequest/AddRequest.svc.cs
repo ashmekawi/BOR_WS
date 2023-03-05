@@ -26,7 +26,7 @@ namespace BOR_WS.Services.AddRequest
         {
 
             AddRequestResponse response = new AddRequestResponse();
-            if (request.RequestTypeID == 2)
+            if (request.RequestTypeID == 1)
             {
                 XDocument xdoc = XDocument.Parse(request.RequestXML);
                 var UCR = xdoc.Descendants("CRAInfo__UCR").First()?.Value;
@@ -34,7 +34,7 @@ namespace BOR_WS.Services.AddRequest
                 AddSubRequestRequest addSub = new AddSubRequestRequest();
                 addSub.RequestID = x;
                 addSub.Txt = request.RequestXML;
-                addSub.SubRequestTypeID = 2;
+                addSub.SubRequestTypeID = 1;
                 AddSubRequest(addSub);
                 response.RequestID = Convert.ToInt32(x);
                 response.ResponseCode = 200;
@@ -146,7 +146,7 @@ namespace BOR_WS.Services.AddRequest
                 else
                 {
                     db.closeDatabaseConnection();
-                    throw new DBException(404, "لا يوجد منشئات لهذا الرقم القومي");
+                    throw new DBException(404, "لا يوجد طلبات لهذا الرقم القومي");
                 }
             }
             catch (Exception ex)

@@ -109,6 +109,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Services\AddRequest\AddRequest.svc" />
+    <Content Include="Services\BackEnd\BackEnd.svc" />
     <Content Include="Services\ControlPanel\ControlPanel.svc" />
     <Content Include="Services\CRA\GetLegals.svc" />
     <Content Include="Services\GetLookup\GetLookup.svc" />
@@ -132,6 +133,8 @@
     <Compile Include="Modules\AddRequest\GetRequestsResponse.cs" />
     <Compile Include="Modules\AddRequest\Request.cs" />
     <Compile Include="Modules\AddRequest\RequestHistory.cs" />
+    <Compile Include="Modules\BackEnd\LoginRequest.cs" />
+    <Compile Include="Modules\BackEnd\LoginResponse.cs" />
     <Compile Include="Modules\BORException.cs" />
     <Compile Include="Modules\ControlPanel\ControlPanelResponse.cs" />
     <Compile Include="Modules\CRA\Capital.cs" />
@@ -159,6 +162,10 @@
       <DependentUpon>AddRequest.svc</DependentUpon>
     </Compile>
     <Compile Include="Services\AddRequest\IAddRequest.cs" />
+    <Compile Include="Services\BackEnd\BackEnd.svc.cs">
+      <DependentUpon>BackEnd.svc</DependentUpon>
+    </Compile>
+    <Compile Include="Services\BackEnd\IBackEnd.cs" />
     <Compile Include="Services\ControlPanel\ControlPanel.svc.cs">
       <DependentUpon>ControlPanel.svc</DependentUpon>
     </Compile>
