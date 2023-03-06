@@ -130,7 +130,36 @@ namespace BOR_WS.Services.AddRequest
                         }
                         catch (Exception)
                         {
-                            request1.Name0 = "لا يوجد";
+                            string BOIID = "";
+                            try
+                            {
+                                BOIID = xdoc.Descendants("BOI_BOIID").First()?.Value;
+                            }
+                            catch (Exception)
+                            {
+
+                                 
+                            }
+                            
+                            if (string.IsNullOrEmpty(BOIID))
+                            {
+                                request1.Name0 = "لا يوجد";
+                            }
+                            else
+                            {
+                                try
+                                {
+                                    request1.Name0 = servicedb.Database.SqlQuery<string>("SELECT CoName FROM [CRRB].[dbo].[BOI_Name] where BOIID = " + BOIID + "").FirstOrDefault();
+
+                                }
+                                catch (Exception)
+                                {
+
+                                    request1.Name0 = "لا يوجد";
+                                }
+                            }
+                            
+                            
 
 
                         }
@@ -307,6 +336,15 @@ namespace BOR_WS.Services.AddRequest
         {
             int x =Convert.ToInt32(servicedb.Database.SqlQuery<int>("SELECT * FROM [dbo].[BOI_Person_GetStatus] ("+BOI+",'"+NID+"',"+ NATIONALITYID + ","+ BIRTHDATE + ")").FirstOrDefault());
             return 1;
+        }
+        public List<GetRequestFeesResponse> GetRequestFees(GetRequestFeesRequest request)
+        {
+            List<GetRequestFeesResponse> response = new List<GetRequestFeesResponse>();
+            string str = "SELECT AccountNum,FeeName,isnull(Amount,0)as Amount FROM [dbo].[CRRB_Request_GetFees]"+
+                " ("+request.RequestTypeID+","+request.IssueOfc+","+request.DelvaryOpation+",'"+request.XML+"')";
+            response = servicedb.Database.SqlQuery<GetRequestFeesResponse>(str).ToList();
+            return response;
+
         }
     }
 }

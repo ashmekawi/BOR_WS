@@ -92,6 +92,15 @@ namespace BOR_WS.Services.GetLookup
             AddOwnerLookUps.Stockmarket = servicedb.Database.SqlQuery<Lookup>("SELECT * FROM[dbo].[CRRB_GetLockup]('Stockmarket', 0)").ToList();
             return AddOwnerLookUps;
         }
+        public AddArrLookUps AddArrLookUp()
+        {
+            AddArrLookUps AddArrLookUps = new AddArrLookUps();
+            AddArrLookUps.IssueLaw = servicedb.Database.SqlQuery<Lookup>("SELECT * FROM [dbo].[CRRB_GetLockup] ('IssueLaw' ,2)").ToList();
+            AddArrLookUps.ArrType = servicedb.Database.SqlQuery<Lookup>("SELECT * FROM [dbo].[CRRB_GetLockup] ('Legal' ,2)").ToList();
+            AddArrLookUps.Permission = servicedb.Database.SqlQuery<Lookup>("SELECT * FROM [dbo].[CRRB_GetLockup] ('PermissionSource' ,0)").ToList();
+            AddArrLookUps.Contact = servicedb.Database.SqlQuery<Lookup>("SELECT * FROM[dbo].[CRRB_GetLockup]('Contactype', 0)").ToList();
+            return AddArrLookUps;
+        }
 
 
 

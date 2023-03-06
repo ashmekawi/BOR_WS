@@ -28,8 +28,8 @@ namespace BOR_WS.Services.AddRequest
         [OperationContract]
         int AddOwnerCheck(string NID, string BOI, int NATIONALITYID, int BIRTHDATE);
 
-
-
+        [OperationContract]
+        List<GetRequestFeesResponse> GetRequestFees(GetRequestFeesRequest request);
 
     }
 }

@@ -128,6 +128,8 @@
     <Compile Include="Modules\AddRequest\AddSubRequestRequest.cs" />
     <Compile Include="Modules\AddRequest\AddSubRequestResponse.cs" />
     <Compile Include="Modules\AddRequest\File.cs" />
+    <Compile Include="Modules\AddRequest\GetRequestFeesRequest.cs" />
+    <Compile Include="Modules\AddRequest\GetRequestFeesResponse.cs" />
     <Compile Include="Modules\AddRequest\GetRequestHistoryResponse.cs" />
     <Compile Include="Modules\AddRequest\GetRequestsRequest.cs" />
     <Compile Include="Modules\AddRequest\GetRequestsResponse.cs" />
@@ -137,6 +139,7 @@
     <Compile Include="Modules\BackEnd\LoginResponse.cs" />
     <Compile Include="Modules\BORException.cs" />
     <Compile Include="Modules\ControlPanel\ControlPanelResponse.cs" />
+    <Compile Include="Modules\CRA\Arrng.cs" />
     <Compile Include="Modules\CRA\Capital.cs" />
     <Compile Include="Modules\CRA\Companies.cs" />
     <Compile Include="Modules\CRA\CompanyData.cs" />
@@ -146,6 +149,7 @@
     <Compile Include="Modules\CRA\GetCompanyDataResponse.cs" />
     <Compile Include="Modules\CRA\GetCompanyInfoNIDRequest.cs" />
     <Compile Include="Modules\CRA\GetCompanyInfoNIDResponse.cs" />
+    <Compile Include="Modules\GetLookup\AddArrLookUps.cs" />
     <Compile Include="Modules\GetLookup\AddOwnerLookUps.cs" />
     <Compile Include="Modules\GetLookup\GetLookupRequest.cs" />
     <Compile Include="Modules\GetLookup\GetLookupResponse.cs" />

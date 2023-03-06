@@ -59,5 +59,6 @@ namespace BOR_WS.Services.CRA
             response.CountOwner =  Convert.ToInt32(db.Database.SqlQuery<int>("SELECT [dbo].[GetCountOwner](" + response.BOI +")").FirstOrDefault());
             return response;
         }
+
     }
 }
