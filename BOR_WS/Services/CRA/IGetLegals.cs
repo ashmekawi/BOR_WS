@@ -17,8 +17,11 @@ namespace BOR_WS.Services.CRA
         [OperationContract]
         GetCompanyDataResponse GetCompanyDataResponse(string UCR);
         [OperationContract]
+
         Co_GetMainData2BOI GetMainData2BOI(string UCR);
         [OperationContract]
         GetBOIResponse GetBOI(string UCR);
+        [OperationContract]
+        List<Arrng> GetArrangements(string citizenNationalId);
     }
 }

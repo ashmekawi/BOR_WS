@@ -14,5 +14,9 @@ namespace BOR_WS.Services.BackEnd
     {
         [OperationContract]
         LoginResponse Login(LoginRequest request);
+        [OperationContract]
+        int RequestInProgress(RequestInProgressRequest request);
+        //[OperationContract]
+        // int AddEntity(AddEntityRequest request);
     }
 }

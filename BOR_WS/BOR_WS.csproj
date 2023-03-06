@@ -135,8 +135,10 @@
     <Compile Include="Modules\AddRequest\GetRequestsResponse.cs" />
     <Compile Include="Modules\AddRequest\Request.cs" />
     <Compile Include="Modules\AddRequest\RequestHistory.cs" />
+    <Compile Include="Modules\BackEnd\AddEntityRequest.cs" />
     <Compile Include="Modules\BackEnd\LoginRequest.cs" />
     <Compile Include="Modules\BackEnd\LoginResponse.cs" />
+    <Compile Include="Modules\BackEnd\RequestInProgressRequest.cs" />
     <Compile Include="Modules\BORException.cs" />
     <Compile Include="Modules\ControlPanel\ControlPanelResponse.cs" />
     <Compile Include="Modules\CRA\Arrng.cs" />

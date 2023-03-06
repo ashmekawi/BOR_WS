@@ -60,5 +60,12 @@ namespace BOR_WS.Services.CRA
             return response;
         }
 
+        public List<Arrng> GetArrangements(string citizenNationalId)
+        {
+            List<Arrng> arrngs = new List<Arrng>();
+            arrngs = db.Database.SqlQuery<Arrng>("SELECT * FROM [dbo].[CRRB_GetBOI_ByNID] ('"+citizenNationalId+"') where Left(UCR,1)=2").ToList();
+            return arrngs;
+
+        }
     }
 }
