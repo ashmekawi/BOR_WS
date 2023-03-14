@@ -23,7 +23,6 @@ namespace BOR_WS.Services.BackEnd
             LoginResponse response = db.Database.SqlQuery<LoginResponse>(str).FirstOrDefault();
             return response;
         }
-
         public int RequestInProgress(RequestInProgressRequest request)
         {
             string str = "sp_CRRB_RequestAudit_add "+request.RequestID+","+request.InProgress+","+request.UserID+"";
@@ -37,33 +36,43 @@ namespace BOR_WS.Services.BackEnd
             else
             {
                 return 0;
+            }      
+        }
+        public int AddEntity(AddEntityRequest request)
+        {
+            string str = "exec [dbo].[sp_CRRB_AddEntity]  " + request.RequestID + "  ," + request.UserID + "";
+            DataSet ds = new DataSet();
+            SqlConnection con = new SqlConnection(System.Configuration.ConfigurationManager.ConnectionStrings["CRRB_ServiceContext"].ConnectionString);
+            SqlDataAdapter da = new SqlDataAdapter(str,con);
+            try
+            {
+                con.Open();
+                da.Fill(ds);
+                con.Close();
+            }
+            catch (Exception)
+            {
+                con.Close();
+                throw;
             }
 
-          
+            return Convert.ToInt32(ds.Tables[ds.Tables.Count].Rows[0]["RecID"]);
+
         }
-        //public int AddEntity(AddEntityRequest request)
-        //{
-        //    string str = "exec [dbo].[sp_CRRB_AddEntity]  "+ request.RequestID +"  ,"+ request.UserID +"";
-        //    DataSet ds = new DataSet();
-        //    SqlConnection con = new SqlConnection(System.Configuration.ConfigurationManager.ConnectionStrings["CRRB_ServiceContext"].ConnectionString);
-        //    SqlDataAdapter da = new SqlDataAdapter();
-        //    try
-        //    {
-        //        con.Open();
-        //        da.Fill(ds);
-        //        con.Close();
-        //    }
-        //    catch (Exception)
-        //    {
-        //        con.Close();
-        //        throw;
-        //    }
-        
-        //    return Convert.ToInt32(ds.Tables[ds.Tables.Count].Rows[0]["RecID"]);
+        public List<BackEndRequestsReponse> Requests(int Office, int UserID,int InProgress)
+        {
+            List<BackEndRequestsReponse> response = new List<BackEndRequestsReponse>();
+            response = CRRB.Database.SqlQuery<BackEndRequestsReponse>("SELECT * FROM [dbo].[Request_GetAtInProgress]"+
+                " ( "+Office+" ,"+UserID+"  ,"+InProgress+")").ToList();
+            return response;
 
-        //}
-
-        
-
+        }
+        public List<Decision> AvailableDecision(int RequestID, int DecisionMaker)
+        {
+            List<Decision> Decisions = new List<Decision>();
+            string str = "SELECT* FROM[dbo].[Request_AvailableDecision] ("+RequestID+","+DecisionMaker+")";
+            Decisions = CRRB.Database.SqlQuery<Decision>(str).ToList();
+            return Decisions;
+        }
     }
 }

@@ -23,5 +23,9 @@ namespace BOR_WS.Services.CRA
         GetBOIResponse GetBOI(string UCR);
         [OperationContract]
         List<Arrng> GetArrangements(string citizenNationalId);
+        [OperationContract]
+        GetArrangementsDataResponse GetArrangementsData(string UCR);
+        [OperationContract]
+        List<Realbeneficiary> GetRealbeneficiaryByBOIID(int BOIID);
     }
 }

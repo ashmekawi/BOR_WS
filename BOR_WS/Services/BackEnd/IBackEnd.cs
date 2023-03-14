@@ -16,7 +16,11 @@ namespace BOR_WS.Services.BackEnd
         LoginResponse Login(LoginRequest request);
         [OperationContract]
         int RequestInProgress(RequestInProgressRequest request);
-        //[OperationContract]
-        // int AddEntity(AddEntityRequest request);
+        [OperationContract]
+        int AddEntity(AddEntityRequest request);
+        [OperationContract]
+        List<BackEndRequestsReponse> Requests(int Office, int UserID, int InProgress);
+        [OperationContract]
+        List<Decision> AvailableDecision(int RequestID, int DecisionMaker);
     }
 }

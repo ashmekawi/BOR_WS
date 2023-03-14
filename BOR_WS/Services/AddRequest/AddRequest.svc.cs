@@ -184,6 +184,22 @@ namespace BOR_WS.Services.AddRequest
                 throw ex;
             }
         }
+        public GetRequestsResponse GetFinshedRequests(GetRequestsRequest request)
+        {
+            GetRequestsResponse response = new GetRequestsResponse();
+
+            try
+            {
+                string str = "SELECT * FROM [dbo].[Request_GetMyRequestFinshed] ('" + request.UserID + "') order by ID desc";
+                response.Requests = servicedb.Database.SqlQuery<Request>(str).ToList();
+            }
+            catch (Exception ex)
+            {
+
+            }
+            return response;
+
+        }
         public Request GetRequestByID(int id)
         {
             try
@@ -346,6 +362,12 @@ namespace BOR_WS.Services.AddRequest
             return response;
 
         }
+
+
+
+
+
+
     }
 }
 

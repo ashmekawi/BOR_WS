@@ -136,6 +136,8 @@
     <Compile Include="Modules\AddRequest\Request.cs" />
     <Compile Include="Modules\AddRequest\RequestHistory.cs" />
     <Compile Include="Modules\BackEnd\AddEntityRequest.cs" />
+    <Compile Include="Modules\BackEnd\BackEndRequestsReponse.cs" />
+    <Compile Include="Modules\BackEnd\Decision.cs" />
     <Compile Include="Modules\BackEnd\LoginRequest.cs" />
     <Compile Include="Modules\BackEnd\LoginResponse.cs" />
     <Compile Include="Modules\BackEnd\RequestInProgressRequest.cs" />
@@ -147,10 +149,13 @@
     <Compile Include="Modules\CRA\CompanyData.cs" />
     <Compile Include="Modules\CRA\Co_GetCapital2BOI.cs" />
     <Compile Include="Modules\CRA\Co_GetMainData2BOI.cs" />
+    <Compile Include="Modules\CRA\GetArrangementsDataResponse.cs" />
     <Compile Include="Modules\CRA\GetBOIResponse.cs" />
     <Compile Include="Modules\CRA\GetCompanyDataResponse.cs" />
     <Compile Include="Modules\CRA\GetCompanyInfoNIDRequest.cs" />
     <Compile Include="Modules\CRA\GetCompanyInfoNIDResponse.cs" />
+    <Compile Include="Modules\CRA\Realbeneficiary.cs" />
+    <Compile Include="Modules\GetLookup\Activity.cs" />
     <Compile Include="Modules\GetLookup\AddArrLookUps.cs" />
     <Compile Include="Modules\GetLookup\AddOwnerLookUps.cs" />
     <Compile Include="Modules\GetLookup\GetLookupRequest.cs" />

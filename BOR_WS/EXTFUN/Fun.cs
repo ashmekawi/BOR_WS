@@ -131,7 +131,68 @@ namespace BOR_WS.EXTFUN
             }
          
         }
+        public static void SmsITDA(string msg, string phone)
+        {
+            string id = "";
+            DBMan db = new DBMan();
+            DataSet result = new DataSet();
+            try
+            {
+                db.openDatabaseConnection();
+                SqlCommand sqlCommand = new SqlCommand("[sp_SMS_ADD]");
+                sqlCommand.CommandType = CommandType.StoredProcedure;
+                sqlCommand.Parameters.AddWithValue("@ID", 0);
+                sqlCommand.Parameters.AddWithValue("@Phone", phone);
+                sqlCommand.Parameters.AddWithValue("@MSG", msg);
+                sqlCommand.Parameters.AddWithValue("@Result", "");
+                sqlCommand.Parameters.AddWithValue("@UserID", 0);
+                sqlCommand.Parameters.AddWithValue("@New", 1);
+                sqlCommand.Connection = db.databaseConnection;
+                result = db.executeSqlCommand(sqlCommand);
+                db.closeDatabaseConnection();
+                id = result.Tables[0].Rows[0][0].ToString();
+            }
 
+            catch (Exception ex)
+            {
+
+            }
+
+            phone = "2" + phone;
+            string network = phone.Substring(0, 4);
+            msg = "رقم التفعيل الخاص بكم هو" + msg;
+            string url = "https://ht.cequens.com/Send.aspx?UserName=advanced&Password=pkjsms&MessageType=text&Recipients="+ phone +"&SenderName=ITDA&MessageText="+msg;
+            var client = new WebClient();
+            var content = "";
+            try
+            {
+                content = client.DownloadString(url);
+            }
+            catch (Exception ex)
+            {
+                content = ex.Message;
+            }
+            try
+            {
+                db.openDatabaseConnection();
+                SqlCommand sqlCommand = new SqlCommand("[sp_SMS_ADD]");
+                sqlCommand.CommandType = CommandType.StoredProcedure;
+                sqlCommand.Parameters.AddWithValue("@ID", Convert.ToInt32(result.Tables[0].Rows[0][0]));
+                sqlCommand.Parameters.AddWithValue("@Phone", phone);
+                sqlCommand.Parameters.AddWithValue("@MSG", msg);
+                sqlCommand.Parameters.AddWithValue("@Result", content);
+                sqlCommand.Parameters.AddWithValue("@UserID", 0);
+                sqlCommand.Parameters.AddWithValue("@New", 0);
+                sqlCommand.Connection = db.databaseConnection;
+                result = db.executeSqlCommand(sqlCommand);
+                db.closeDatabaseConnection();
+            }
+
+            catch (Exception ex)
+            {
+
+            }
+        }
         public static DataTable XMLTODataTable(string str)
         {
             string xmlData = str;
@@ -157,7 +218,6 @@ namespace BOR_WS.EXTFUN
 
             return dt;
         }
-
         public static int CRATOBOIRequest(string UCR,int UserID)
         {
             try

@@ -101,7 +101,13 @@ namespace BOR_WS.Services.GetLookup
             AddArrLookUps.Contact = servicedb.Database.SqlQuery<Lookup>("SELECT * FROM[dbo].[CRRB_GetLockup]('Contactype', 0)").ToList();
             return AddArrLookUps;
         }
+        public List<Activity> Activities_Finder(string Search)
+        {
+            List<Activity> activities = new List<Activity>();
+            activities = servicedb.Database.SqlQuery<Activity>("SELECT * FROM [dbo].[Activities_Finder] ('"+Search+"')").ToList();
+            return activities;
 
+        }
 
 
     }

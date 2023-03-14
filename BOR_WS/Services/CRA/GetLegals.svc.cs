@@ -34,7 +34,7 @@ namespace BOR_WS.Services.CRA
         public GetCompanyDataResponse GetCompanyDataResponse(string UCR)
         {
             GetCompanyDataResponse response = new GetCompanyDataResponse();
-            response.Company = db1.Database.SqlQuery<CompanyData>("SELECT * FROM [dbo].[Fn_getCapitalByUCR] ('"+UCR+"')").FirstOrDefault();
+            response.Company = db1.Database.SqlQuery<CompanyData>("SELECT * FROM [dbo].[Fn_getCapitalByUCR] ('" + UCR + "')").FirstOrDefault();
             response.Company.capitals = db1.Database.SqlQuery<Capital>("SELECT * FROM [dbo].[Fn_getCapitalByUCR] ('" + UCR + "')").ToList();
             response.ResponseCode = 200;
             response.ResponseMessage = "Sucsess";
@@ -55,17 +55,30 @@ namespace BOR_WS.Services.CRA
         public GetBOIResponse GetBOI(string UCR)
         {
             GetBOIResponse response = new GetBOIResponse();
-            response.BOI =  Convert.ToInt32(db.Database.SqlQuery<string>("SELECT [dbo].[GetBOIByUCR] ('"+ UCR +"')").FirstOrDefault());
-            response.CountOwner =  Convert.ToInt32(db.Database.SqlQuery<int>("SELECT [dbo].[GetCountOwner](" + response.BOI +")").FirstOrDefault());
+            response.BOI = Convert.ToInt32(db.Database.SqlQuery<string>("SELECT [dbo].[GetBOIByUCR] ('" + UCR + "')").FirstOrDefault());
+            response.CountOwner = Convert.ToInt32(db.Database.SqlQuery<int>("SELECT [dbo].[GetCountOwner](" + response.BOI + ")").FirstOrDefault());
             return response;
         }
-
         public List<Arrng> GetArrangements(string citizenNationalId)
         {
             List<Arrng> arrngs = new List<Arrng>();
-            arrngs = db.Database.SqlQuery<Arrng>("SELECT * FROM [dbo].[CRRB_GetBOI_ByNID] ('"+citizenNationalId+"') where Left(UCR,1)=2").ToList();
+            arrngs = db.Database.SqlQuery<Arrng>("SELECT * FROM [dbo].[CRRB_GetBOI_ByNID] ('" + citizenNationalId + "') where Left(UCR,1)=2").ToList();
             return arrngs;
 
         }
+        public GetArrangementsDataResponse GetArrangementsData(string UCR)
+        {
+            GetArrangementsDataResponse response = new GetArrangementsDataResponse();
+            response = db.Database.SqlQuery<GetArrangementsDataResponse>("SELECT * FROM [dbo].[CRRB_GetBOI_ByUCR] ('"+UCR+"')").FirstOrDefault() ;
+            return response;
+        }
+
+        public List<Realbeneficiary> GetRealbeneficiaryByBOIID(int BOIID)
+        {
+            List<Realbeneficiary> realbeneficiaries = new List<Realbeneficiary>();
+            realbeneficiaries = db.Database.SqlQuery<Realbeneficiary>("select* from dbo.[BOI_GetRealbeneficiaryByBOIID] ("+BOIID+")").ToList();
+            return realbeneficiaries;
+        }
+        
     }
 }

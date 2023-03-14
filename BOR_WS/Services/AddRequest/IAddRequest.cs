@@ -21,6 +21,9 @@ namespace BOR_WS.Services.AddRequest
         int RequestCount(int UserID);
         [OperationContract]
         GetRequestsResponse GetRequests(GetRequestsRequest request);
+
+        [OperationContract]
+        GetRequestsResponse GetFinshedRequests(GetRequestsRequest request);
         [OperationContract]
         GetRequestHistoryResponse GetRequestHistory(int requestid);
         [OperationContract]

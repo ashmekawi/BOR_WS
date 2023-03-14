@@ -18,5 +18,7 @@ namespace BOR_WS.Services.GetLookup
         AddOwnerLookUps AddOwnerLookUp();
         [OperationContract]
          AddArrLookUps AddArrLookUp();
+        [OperationContract]
+        List<Activity> Activities_Finder(string Search);
     }
 }
