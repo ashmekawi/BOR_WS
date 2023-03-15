@@ -1,4 +1,5 @@
-﻿using BOR_WS.Modules.BackEnd;
+﻿using BOR_WS.Modules.AddRequest;
+using BOR_WS.Modules.BackEnd;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -22,5 +23,11 @@ namespace BOR_WS.Services.BackEnd
         List<BackEndRequestsReponse> Requests(int Office, int UserID, int InProgress);
         [OperationContract]
         List<Decision> AvailableDecision(int RequestID, int DecisionMaker);
+        [OperationContract]
+        List<Request> GetBackEndRequest(int RequestID, string Nid, string Phon, string UCR);
+        [OperationContract]
+        Office_GetRequestInfResponse GetBackEndRequestData(int RequestID);
+        [OperationContract]
+        Book GetBOIBook(string BOIID);
     }
 }

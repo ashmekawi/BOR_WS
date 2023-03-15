@@ -21,7 +21,7 @@ namespace BOR_WS.Services.CRA
         public GetCompanyInfoNIDResponse GetCompanyInfoNIDResponse(GetCompanyInfoNIDRequest GetCompanyInfoNIDRequest)
         {
             List<Companies> companies = new List<Companies>();
-            companies = db.Database.SqlQuery<Companies>("SELECT * FROM [dbo].[CRRB_GetBOI_ByNID] ('" + GetCompanyInfoNIDRequest.citizenNationalId + "')").ToList();
+            companies = db.Database.SqlQuery<Companies>("SELECT * FROM [dbo].[CRRB_GetBOI_ByNID] ('" + GetCompanyInfoNIDRequest.citizenNationalId + "')where left(UCR,1)='1'").ToList();
             GetCompanyInfoNIDResponse response = new GetCompanyInfoNIDResponse();
             response.Companies = db1.Database.SqlQuery<Companies>("SELECT * FROM [dbo].[Fn_Por_GetDataByNID] ('" + GetCompanyInfoNIDRequest.citizenNationalId + "')").ToList();
             if (companies.Count > 0)

@@ -137,9 +137,14 @@
     <Compile Include="Modules\AddRequest\RequestHistory.cs" />
     <Compile Include="Modules\BackEnd\AddEntityRequest.cs" />
     <Compile Include="Modules\BackEnd\BackEndRequestsReponse.cs" />
+    <Compile Include="Modules\BackEnd\Book.cs" />
+    <Compile Include="Modules\BackEnd\BookRow.cs" />
     <Compile Include="Modules\BackEnd\Decision.cs" />
     <Compile Include="Modules\BackEnd\LoginRequest.cs" />
     <Compile Include="Modules\BackEnd\LoginResponse.cs" />
+    <Compile Include="Modules\BackEnd\Office_GetRequestInfo.cs" />
+    <Compile Include="Modules\BackEnd\Office_GetRequestInfResponse.cs" />
+    <Compile Include="Modules\BackEnd\RequestFile.cs" />
     <Compile Include="Modules\BackEnd\RequestInProgressRequest.cs" />
     <Compile Include="Modules\BORException.cs" />
     <Compile Include="Modules\ControlPanel\ControlPanelResponse.cs" />
