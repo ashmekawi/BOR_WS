@@ -7,6 +7,9 @@ namespace BOR_WS.Modules.BackEnd
 {
     public class Book
     {
+        public int ResponseCode { get; set; }
+        public string ResponeMSG { get; set; }
         public List<BookRow> BookRow { get; set; }
+        
     }
 }

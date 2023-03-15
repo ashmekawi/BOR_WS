@@ -1,4 +1,5 @@
-﻿using BOR_WS.Modules.AddRequest;
+﻿using BOR_WS.Modules;
+using BOR_WS.Modules.AddRequest;
 using BOR_WS.Modules.BackEnd;
 using System;
 using System.Collections.Generic;
@@ -28,6 +29,8 @@ namespace BOR_WS.Services.BackEnd
         [OperationContract]
         Office_GetRequestInfResponse GetBackEndRequestData(int RequestID);
         [OperationContract]
-        Book GetBOIBook(string BOIID);
+        Book GetBOIBook(string BOIID,string UCR);
+        [OperationContract]
+        Result Payment(int RequestID, decimal TotalFees, int ReceiptNum, int ReceiptGroup, DateTime ReceiptDate, int UserID);
     }
 }

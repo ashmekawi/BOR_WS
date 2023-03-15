@@ -173,6 +173,7 @@
     <Compile Include="Modules\Registration\RegistrationRequest.cs" />
     <Compile Include="Modules\Registration\RegistrationResponse.cs" />
     <Compile Include="Modules\Registration\ReSendConfirmation.cs" />
+    <Compile Include="Modules\Result.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\AddRequest\AddRequest.svc.cs">
       <DependentUpon>AddRequest.svc</DependentUpon>

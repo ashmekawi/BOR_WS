@@ -1,4 +1,5 @@
 ﻿using BOR_WS.EXTFUN;
+using BOR_WS.Modules;
 using BOR_WS.Modules.AddRequest;
 using BOR_WS.Modules.BackEnd;
 using System;
@@ -75,7 +76,6 @@ namespace BOR_WS.Services.BackEnd
             Decisions = CRRB.Database.SqlQuery<Decision>(str).ToList();
             return Decisions;
         }
-
         public List<Request> GetBackEndRequest(int RequestID, string Nid, string Phon, string UCR)
         {
             List<Request> requests = new List<Request>();
@@ -88,24 +88,44 @@ namespace BOR_WS.Services.BackEnd
         {
             Office_GetRequestInfResponse response = new Office_GetRequestInfResponse();
             response.RequestInfo = CRRB.Database.SqlQuery<Office_GetRequestInfo>("SELECT * FROM [dbo].[Office_GetRequestInfo] (" + RequestID + ")").ToList();
-            response.Files = CRRB.Database.SqlQuery<RequestFile>("SELECT          CRRB_RequestAttachment.Seq"+
-" , CRRB_RequestAttachment.img, DocType.Adesc, FExtType.Adesc AS FExtType"+
-" FROM            CRRB_RequestAttachment INNER JOIN"+
-                         " DocType ON CRRB_RequestAttachment.DocTypeID = DocType.ID INNER JOIN"+
-                         " FExtType ON CRRB_RequestAttachment.FExtType = FExtType.ID"+
+            response.Files = CRRB.Database.SqlQuery<RequestFile>("SELECT          CRRB_RequestAttachment.Seq" +
+" , CRRB_RequestAttachment.img, DocType.Adesc, FExtType.Adesc AS FExtType" +
+" FROM            CRRB_RequestAttachment INNER JOIN" +
+                         " DocType ON CRRB_RequestAttachment.DocTypeID = DocType.ID INNER JOIN" +
+                         " FExtType ON CRRB_RequestAttachment.FExtType = FExtType.ID" +
 
                         " where CRRB_RequestAttachment.RequestID = 53").ToList();
             response.Decisions = CRRB.Database.SqlQuery<Decision>("SELECT* FROM[dbo].[Request_AvailableDecision] (" + RequestID + "," + 3 + ")").ToList();
             return response;
 
         }
-
-        public Book GetBOIBook(string BOIID)
+        public Book GetBOIBook(string BOIID, string UCR)
         {
+            int exists = CRRB.Database.SqlQuery<int>("SELECT [dbo].[BOIExists] (" + BOIID + "," + UCR + ")").FirstOrDefault();
+
             Book book = new Book();
-            string str = "SELECT* FROM[dbo].[CRRB_GetBOI_Book] (25, 0)";
+            if (exists == 1)
+            {
+                book.ResponseCode = 200;
+                book.ResponeMSG = "Done";
+            }
+            else
+            {
+                book.ResponseCode = 201;
+                book.ResponeMSG = "هذه المنشأة غير موجودة";
+            }
+            string str = "SELECT* FROM[dbo].[CRRB_GetBOI_Book] (" + BOIID + ", " + UCR + ")";
             book.BookRow = CRRB.Database.SqlQuery<BookRow>(str).ToList();
             return book;
+        }
+        public Result Payment(int RequestID, decimal TotalFees, int ReceiptNum, int ReceiptGroup, DateTime ReceiptDate, int UserID)
+        {
+            Result result = new Result();
+            int date = int.Parse(ReceiptDate.ToString("yyyyMMdd"));
+            string str = "EXECUTE[dbo].[SP_CRRB_RequestPayment_add] " +
+                RequestID + "," + TotalFees + "," + ReceiptNum + "," + ReceiptGroup + "," + date + "," + UserID;
+            result = CRRB.Database.SqlQuery<Result>(str).FirstOrDefault();
+            return result;
         }
     }
 }
