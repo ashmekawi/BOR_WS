@@ -108,6 +108,25 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Connected Services\MOB\BOR_WS.MOB.MobCheckResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Connected Services\MOB\BOR_WS.MOB.Result.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <None Include="Connected Services\MOB\Mob.wsdl" />
+    <None Include="Connected Services\QRGenerator\configuration91.svcinfo" />
+    <None Include="Connected Services\QRGenerator\configuration.svcinfo" />
+    <None Include="Connected Services\QRGenerator\Reference.svcmap">
+      <Generator>WCF Proxy Generator</Generator>
+      <LastGenOutput>Reference.cs</LastGenOutput>
+    </None>
+    <None Include="Connected Services\MOB\configuration91.svcinfo" />
+    <None Include="Connected Services\MOB\configuration.svcinfo" />
+    <None Include="Connected Services\MOB\Reference.svcmap">
+      <Generator>WCF Proxy Generator</Generator>
+      <LastGenOutput>Reference.cs</LastGenOutput>
+    </None>
     <Content Include="Services\AddRequest\AddRequest.svc" />
     <Content Include="Services\BackEnd\BackEnd.svc" />
     <Content Include="Services\ControlPanel\ControlPanel.svc" />
@@ -117,6 +136,16 @@
     <Content Include="Web111.config" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Connected Services\MOB\Reference.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Compile>
+    <Compile Include="Connected Services\QRGenerator\Reference.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Compile>
     <Compile Include="DataBase\CRADB.cs" />
     <Compile Include="DataBase\DBException.cs" />
     <Compile Include="DataBase\DBMan.cs" />
@@ -140,6 +169,10 @@
     <Compile Include="Modules\BackEnd\Book.cs" />
     <Compile Include="Modules\BackEnd\BookRow.cs" />
     <Compile Include="Modules\BackEnd\Decision.cs" />
+    <Compile Include="Modules\BackEnd\Footer.cs" />
+    <Compile Include="Modules\BackEnd\FooterRow.cs" />
+    <Compile Include="Modules\BackEnd\Header.cs" />
+    <Compile Include="Modules\BackEnd\HeaderRow.cs" />
     <Compile Include="Modules\BackEnd\LoginRequest.cs" />
     <Compile Include="Modules\BackEnd\LoginResponse.cs" />
     <Compile Include="Modules\BackEnd\Office_GetRequestInfo.cs" />
@@ -204,6 +237,13 @@
     <Compile Include="ValidationManager\Registration\RegistrationValidation.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Connected Services\QRGenerator\QRGenerator.wsdl" />
+    <None Include="Connected Services\QRGenerator\QRGenerator.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Connected Services\QRGenerator\QRGenerator1.xsd">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="packages.config" />
     <Content Include="web.config" />
     <None Include="web.Debug.config">
@@ -219,7 +259,13 @@
       <DependentUpon>Web111.config</DependentUpon>
     </None>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <WCFMetadata Include="Connected Services\" />
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadataStorage Include="Connected Services\MOB\" />
+    <WCFMetadataStorage Include="Connected Services\QRGenerator\" />
+  </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>

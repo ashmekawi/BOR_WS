@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
+using System.Drawing;
 using System.Linq;
 using System.Runtime.Serialization;
 using System.ServiceModel;
@@ -94,16 +95,21 @@ namespace BOR_WS.Services.BackEnd
                          " DocType ON CRRB_RequestAttachment.DocTypeID = DocType.ID INNER JOIN" +
                          " FExtType ON CRRB_RequestAttachment.FExtType = FExtType.ID" +
 
-                        " where CRRB_RequestAttachment.RequestID = 53").ToList();
+                        " where CRRB_RequestAttachment.RequestID = " + RequestID).ToList();
             response.Decisions = CRRB.Database.SqlQuery<Decision>("SELECT* FROM[dbo].[Request_AvailableDecision] (" + RequestID + "," + 3 + ")").ToList();
+            response.UCR = CRRB.Database.SqlQuery<string>("select cast(UCR as nvarchar) from [CRRB_Request] where id=" + RequestID).FirstOrDefault();
+            response.InProgress = CRRB.Database.SqlQuery<int>("select [InProgressID] from [CRRB_Request] where id=" + RequestID).FirstOrDefault();
+            response.InProgressDesc = CRRB.Database.SqlQuery<string>("select [Adesc] from [InProgress] where id=" + response.InProgress).FirstOrDefault();
+            response.RequestType = CRRB.Database.SqlQuery<string>("SELECT        RequestType.Adesc FROM            RequestType INNER JOIN CRRB_Request ON RequestType.ID = CRRB_Request.RequestTypeID where CRRB_Request.ID=" + RequestID).FirstOrDefault();
             return response;
 
         }
-        public Book GetBOIBook(string BOIID, string UCR)
+        public Book GetBOIBook(string BOIID, string UCR, int UserID)
         {
             int exists = CRRB.Database.SqlQuery<int>("SELECT [dbo].[BOIExists] (" + BOIID + "," + UCR + ")").FirstOrDefault();
-
             Book book = new Book();
+            book.Header = new Header();
+            book.Footer = new Footer();
             if (exists == 1)
             {
                 book.ResponseCode = 200;
@@ -114,16 +120,30 @@ namespace BOR_WS.Services.BackEnd
                 book.ResponseCode = 201;
                 book.ResponeMSG = "هذه المنشأة غير موجودة";
             }
-            string str = "SELECT* FROM[dbo].[CRRB_GetBOI_Book] (" + BOIID + ", " + UCR + ")";
+            string str = "SELECT * FROM[dbo].[CRRB_GetBOI_Book] (" + BOIID + ", " + UCR + ")";
             book.BookRow = CRRB.Database.SqlQuery<BookRow>(str).ToList();
+            if (BOIID == "0")
+            {
+                BOIID = Convert.ToString(CRRB.Database.SqlQuery<Decimal>("SELECT BOIID FROM [dbo].[CRRB_GetBOI_ByUCR] (" + UCR + ")").FirstOrDefault());
+            }
+            string UserName = db.Database.SqlQuery<string>("SELECT [FULL_NAME] FROM [CRA00].[dbo].[OPERATOR] where NUMBER0 =" + UserID).FirstOrDefault();
+            book.Footer.FooterRow = CRRB.Database.SqlQuery<FooterRow>("SELECT * FROM CRRB.[dbo].[Pivot_GetBOI_Footer] (" + BOIID + "," + UserID + ",'" + UserName + "')").ToList();
+            book.Header.HeaderRow = CRRB.Database.SqlQuery<HeaderRow>("SELECT * FROM CRRB.[dbo].[Pivot_GetBOI_Header] (" + BOIID + "," + UserID + ",'" + UserName + "')").ToList();
+            string QRText = book.Header.HeaderRow.Where(c => c.Lbl == "رقم الوثيقة").Select(a => a.ItemValue).FirstOrDefault();
+            QRGenerator.QRGeneratorClient qRGenerator = new QRGenerator.QRGeneratorClient();
+            book.Header.QRCode=qRGenerator.GenerateQRCode(QRText);
+          // System.IO.File.WriteAllBytes(@"c:\Reports\QR.jpg", Convert.FromBase64String(book.Header.QRCode));
+
+            book.Header.QREXT = "jpg";
             return book;
+
         }
         public Result Payment(int RequestID, decimal TotalFees, int ReceiptNum, int ReceiptGroup, DateTime ReceiptDate, int UserID)
         {
             Result result = new Result();
             int date = int.Parse(ReceiptDate.ToString("yyyyMMdd"));
             string str = "EXECUTE[dbo].[SP_CRRB_RequestPayment_add] " +
-                RequestID + "," + TotalFees + "," + ReceiptNum + "," + ReceiptGroup + "," + date + "," + UserID;
+            RequestID + "," + TotalFees + "," + ReceiptNum + "," + ReceiptGroup + "," + date + "," + UserID;
             result = CRRB.Database.SqlQuery<Result>(str).FirstOrDefault();
             return result;
         }

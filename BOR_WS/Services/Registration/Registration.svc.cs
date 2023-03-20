@@ -72,11 +72,18 @@ namespace BOR_WS.Services.Registration
         public RegistrationResponse registration(RegistrationRequest request)
         {
             RegistrationValidation validation = new RegistrationValidation();
-
-            validation.Validate(request);
-
-
             RegistrationResponse response = new RegistrationResponse();
+            validation.Validate(request);
+            MOB.MobSoapClient client = new MOB.MobSoapClient();
+           MOB.Result vld = new MOB.Result();
+             vld=client.MobCheck(request.Phone, request.IDNumber);
+            if (vld.VERIFICATION_RESULT == "F")
+            {
+                response.ID = -3;
+                response.Adesc = "رقم الهاتف غير مطابق للرقم القومى";
+                return response;
+            }
+          
             try
             {
                 string name0 = request.FristName + " " + request.SecondName + " " + request.ThirdName + " " + request.FourthName;
@@ -163,7 +170,6 @@ namespace BOR_WS.Services.Registration
                 return false;
             }
         }
-
         public ReSendConfirmation ReSendConfirmationCode(string Mob)
         {
             DataSet result = new DataSet();

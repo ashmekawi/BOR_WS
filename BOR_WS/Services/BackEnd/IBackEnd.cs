@@ -29,7 +29,7 @@ namespace BOR_WS.Services.BackEnd
         [OperationContract]
         Office_GetRequestInfResponse GetBackEndRequestData(int RequestID);
         [OperationContract]
-        Book GetBOIBook(string BOIID,string UCR);
+        Book GetBOIBook(string BOIID,string UCR,int UserID);
         [OperationContract]
         Result Payment(int RequestID, decimal TotalFees, int ReceiptNum, int ReceiptGroup, DateTime ReceiptDate, int UserID);
     }
