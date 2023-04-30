@@ -26,5 +26,7 @@ namespace BOR_WS.Services.Registration
         //string sendsms(string msg, string mob, int id, string network);
         [OperationContract]
         ReSendConfirmation ReSendConfirmationCode(string Mob);
+        [OperationContract]
+        createConfirmationCodeResponse CreateConfirmationCode(createConfirmationCodeRequest request);
     }
 }

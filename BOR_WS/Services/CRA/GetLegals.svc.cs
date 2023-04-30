@@ -72,13 +72,21 @@ namespace BOR_WS.Services.CRA
             response = db.Database.SqlQuery<GetArrangementsDataResponse>("SELECT * FROM [dbo].[CRRB_GetBOI_ByUCR] ('"+UCR+"')").FirstOrDefault() ;
             return response;
         }
-
         public List<Realbeneficiary> GetRealbeneficiaryByBOIID(int BOIID)
         {
             List<Realbeneficiary> realbeneficiaries = new List<Realbeneficiary>();
-            realbeneficiaries = db.Database.SqlQuery<Realbeneficiary>("select* from dbo.[BOI_GetRealbeneficiaryByBOIID] ("+BOIID+")").ToList();
+            string str = "select " +
+                "ID " +
+                ",Name0" +
+                ",NationDesc" +
+                ",CitizenNationalID" +
+                ",posdesc" +
+                ",MngDesc" +
+                ",SngDesc" +
+
+                " from dbo.[BOI_GetRealbeneficiaryByBOIID] (" + BOIID + ")";
+            realbeneficiaries = db.Database.SqlQuery<Realbeneficiary>(str).ToList();
             return realbeneficiaries;
-        }
-        
+        }    
     }
 }

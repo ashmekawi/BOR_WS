@@ -20,6 +20,7 @@ namespace BOR_WS.Services.Registration
     public class Registration : IRegistration
     {
         DBMan db = new DBMan();
+        CRRB_ServiceContext CRRB = new CRRB_ServiceContext();
         public CreatePasswordResponse CreatrePassword(CreatePasswordRequest request)
         {
             CreatePasswordResponse response = new CreatePasswordResponse();
@@ -195,6 +196,17 @@ namespace BOR_WS.Services.Registration
 
             return response;
 
+        }
+        public createConfirmationCodeResponse CreateConfirmationCode(createConfirmationCodeRequest request)
+        {
+            createConfirmationCodeResponse response = new createConfirmationCodeResponse();
+            response = CRRB.Database.SqlQuery<createConfirmationCodeResponse>(
+                "EXEC [dbo].[sp_ReCreate_ConfirmCode]@NID = N'"+request.NID+"',@Phone = N'"+request.Phone+"'"
+                ).FirstOrDefault();
+            if (response.ID==1) { 
+            Fun.SmsITDA(Convert.ToString(response.ConfirmCode), request.Phone);
+            }
+            return response;
         }
 
     }

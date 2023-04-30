@@ -132,6 +132,7 @@
     <Content Include="Services\ControlPanel\ControlPanel.svc" />
     <Content Include="Services\CRA\GetLegals.svc" />
     <Content Include="Services\GetLookup\GetLookup.svc" />
+    <Content Include="Services\GetPersonData\GetPersonData.svc" />
     <Content Include="Services\Registration\Registration.svc" />
     <Content Include="Web111.config" />
   </ItemGroup>
@@ -199,6 +200,15 @@
     <Compile Include="Modules\GetLookup\GetLookupRequest.cs" />
     <Compile Include="Modules\GetLookup\GetLookupResponse.cs" />
     <Compile Include="Modules\GetLookup\Lookup.cs" />
+    <Compile Include="Modules\GetPersonData\Address.cs" />
+    <Compile Include="Modules\GetPersonData\Contact.cs" />
+    <Compile Include="Modules\GetPersonData\Identification.cs" />
+    <Compile Include="Modules\GetPersonData\PerMGM.cs" />
+    <Compile Include="Modules\GetPersonData\Person.cs" />
+    <Compile Include="Modules\GetPersonData\PersonMainData.cs" />
+    <Compile Include="Modules\GetPersonData\ShareRealbeneficiary.cs" />
+    <Compile Include="Modules\Registration\createConfirmationCodeRequest.cs" />
+    <Compile Include="Modules\Registration\createConfirmationCodeResponse.cs" />
     <Compile Include="Modules\Registration\CreatePasswordRequest.cs" />
     <Compile Include="Modules\Registration\CreatePasswordResponse.cs" />
     <Compile Include="Modules\Registration\LoginRequest.cs" />
@@ -228,6 +238,10 @@
       <DependentUpon>GetLookup.svc</DependentUpon>
     </Compile>
     <Compile Include="Services\GetLookup\IGetLookup.cs" />
+    <Compile Include="Services\GetPersonData\GetPersonData.svc.cs">
+      <DependentUpon>GetPersonData.svc</DependentUpon>
+    </Compile>
+    <Compile Include="Services\GetPersonData\IGetPersonData.cs" />
     <Compile Include="Services\Registration\IRegistration.cs" />
     <Compile Include="Services\Registration\Registration.svc.cs">
       <DependentUpon>Registration.svc</DependentUpon>

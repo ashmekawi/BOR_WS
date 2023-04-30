@@ -7,6 +7,7 @@ namespace BOR_WS.Modules.CRA
 {
     public class Realbeneficiary
     {
+        public string ID { get; set; }
         public string Name0 { get; set; }
         public string NationDesc { get; set; }
         public string CitizenNationalID { get; set; }

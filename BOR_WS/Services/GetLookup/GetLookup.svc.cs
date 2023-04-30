@@ -90,6 +90,7 @@ namespace BOR_WS.Services.GetLookup
             AddOwnerLookUps.ShareType = servicedb.Database.SqlQuery<Lookup>("SELECT * FROM[dbo].[CRRB_GetLockup]('ShareType', 0)").ToList();
             AddOwnerLookUps.PersonAdrsType = servicedb.Database.SqlQuery<Lookup>("SELECT * FROM[dbo].[CRRB_GetLockup]('PersonAdrsType', 0)").ToList();
             AddOwnerLookUps.Stockmarket = servicedb.Database.SqlQuery<Lookup>("SELECT * FROM[dbo].[CRRB_GetLockup]('Stockmarket', 0)").ToList();
+            AddOwnerLookUps.legalposition = servicedb.Database.SqlQuery<Lookup>("SELECT * FROM[dbo].[CRRB_GetLockup]('legalposition', 0)").ToList();
             return AddOwnerLookUps;
         }
         public AddArrLookUps AddArrLookUp()

@@ -28,9 +28,10 @@ namespace BOR_WS.Services.AddRequest
             AddRequestResponse response = new AddRequestResponse();
             if (request.RequestTypeID == 1)
             {
-               // XDocument xdoc = XDocument.Parse(request.RequestXML);
-               // var UCR = xdoc.Descendants("CRAInfo__UCR").First()?.Value;
-               var UCR = "100100000396398";
+                //XDocument xdoc = XDocument.Parse(request.RequestXML);
+                //var UCR = xdoc.Descendants("CRAInfo__UCR").First()?.Value;
+                 var UCR = "105300000204049";
+               
                 int x = Fun.CRATOBOIRequest(UCR,request.CustomerID);
                 AddSubRequestRequest addSub = new AddSubRequestRequest();
                 addSub.RequestID = x;

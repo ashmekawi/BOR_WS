@@ -16,5 +16,6 @@ namespace BOR_WS.Modules.GetLookup
         public List<Lookup> ShareType { get; set; }
         public List<Lookup> PersonAdrsType { get; set; }
         public List<Lookup> Stockmarket { get; set; }
+        public List<Lookup> legalposition { get; set; }
     }
 }

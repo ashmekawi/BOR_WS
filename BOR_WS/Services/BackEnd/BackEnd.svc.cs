@@ -124,7 +124,7 @@ namespace BOR_WS.Services.BackEnd
             book.BookRow = CRRB.Database.SqlQuery<BookRow>(str).ToList();
             if (BOIID == "0")
             {
-                BOIID = Convert.ToString(CRRB.Database.SqlQuery<Decimal>("SELECT BOIID FROM [dbo].[CRRB_GetBOI_ByUCR] (" + UCR + ")").FirstOrDefault());
+                BOIID = Convert.ToString(CRRB.Database.SqlQuery<Decimal>("SELECT cast(BOIID as numeric(18, 0))as BOIID FROM [dbo].[CRRB_GetBOI_ByUCR] (" + UCR + ")").FirstOrDefault());
             }
             string UserName = db.Database.SqlQuery<string>("SELECT [FULL_NAME] FROM [CRA00].[dbo].[OPERATOR] where NUMBER0 =" + UserID).FirstOrDefault();
             book.Footer.FooterRow = CRRB.Database.SqlQuery<FooterRow>("SELECT * FROM CRRB.[dbo].[Pivot_GetBOI_Footer] (" + BOIID + "," + UserID + ",'" + UserName + "')").ToList();
