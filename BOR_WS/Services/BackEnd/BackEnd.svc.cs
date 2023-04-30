@@ -43,7 +43,7 @@ namespace BOR_WS.Services.BackEnd
         }
         public int AddEntity(AddEntityRequest request)
         {
-            string str = "exec [dbo].[sp_CRRB_AddEntity]  " + request.RequestID + "  ," + request.UserID + "";
+            string str = "exec [dbo].[sp_CRRB_AddEntity_New]  " + request.RequestID + "  ," + request.UserID + "";
             DataSet ds = new DataSet();
             SqlConnection con = new SqlConnection(System.Configuration.ConfigurationManager.ConnectionStrings["CRRB_ServiceContext"].ConnectionString);
             SqlDataAdapter da = new SqlDataAdapter(str, con);

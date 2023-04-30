@@ -108,6 +108,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="BackEndPrint.asmx" />
     <Content Include="Connected Services\MOB\BOR_WS.MOB.MobCheckResponse.datasource">
       <DependentUpon>Reference.svcmap</DependentUpon>
     </Content>
@@ -137,6 +138,10 @@
     <Content Include="Web111.config" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BackEndPrint.asmx.cs">
+      <DependentUpon>BackEndPrint.asmx</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="Connected Services\MOB\Reference.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -182,6 +187,7 @@
     <Compile Include="Modules\BackEnd\RequestInProgressRequest.cs" />
     <Compile Include="Modules\BORException.cs" />
     <Compile Include="Modules\ControlPanel\ControlPanelResponse.cs" />
+    <Compile Include="Modules\CRAUser.cs" />
     <Compile Include="Modules\CRA\Arrng.cs" />
     <Compile Include="Modules\CRA\Capital.cs" />
     <Compile Include="Modules\CRA\Companies.cs" />
